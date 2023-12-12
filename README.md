@@ -1,2 +1,4 @@
 # SAMAT
-Secure Android Malware Analytics Tool master's project developed by Michał Malinowski, Gabriel Rebelski, Filip Sroczyński and Michał Wnuk 
+
+## 12.12.2023 r.
+### Created repository and pushed first code to it
