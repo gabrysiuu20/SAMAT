@@ -20,7 +20,7 @@ import React, {
     Events[(Events["capabilities"] = 7)] = "capabilities"
   })(Events || (Events = {}))
   
-  const VncScreen = (props, ref) => {
+  const Screen = (props, ref) => {
     const rfb = useRef(null)
     const connected = useRef(props.autoConnect ?? true)
     const timeouts = useRef([])
@@ -329,5 +329,5 @@ import React, {
     )
   }
   
-  export default forwardRef(VncScreen)
+  export default forwardRef(Screen)
   

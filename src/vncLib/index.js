@@ -1,3 +1,3 @@
-import VncScreen from "./Screen"
+import Screen from "./Screen"
 
-export { VncScreen }
+export { Screen }
