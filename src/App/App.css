@@ -7,8 +7,7 @@ body {
 
 .App {
   text-align: center;
-  background-color: #84cfcc;
-  background-image: url('../assets/tv_screen.png');
+  background-color: #b4b4b4;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
@@ -20,7 +19,7 @@ body {
   align-items: center;
   justify-content: baseline;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(0, 0, 0);
   height: 96.5vh;
 }
 
@@ -29,7 +28,6 @@ body {
 }
 
 .App-header p {
-  position: absolute;
   margin-top: 2vh;
 }
 
