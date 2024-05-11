@@ -1,0 +1,6 @@
+@samatAPI_HostAddress = http://localhost:5025
+
+GET {{samatAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
