@@ -1,0 +1,11 @@
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\samatAPI
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\appsettings.Development.json
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\appsettings.json
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\samatAPI.dll
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\samatAPI.deps.json
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\samatAPI.runtimeconfig.json
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\samatAPI.pdb
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\Microsoft.OpenApi.dll
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\user\Documents\SAMAT\samatApi\bin\Release\net8.0\linux-x64\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
