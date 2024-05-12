@@ -1,0 +1,11 @@
+C:\Release\net8.0\publish\samatAPI.exe
+C:\Release\net8.0\publish\appsettings.Development.json
+C:\Release\net8.0\publish\appsettings.json
+C:\Release\net8.0\publish\samatAPI.dll
+C:\Release\net8.0\publish\samatAPI.deps.json
+C:\Release\net8.0\publish\samatAPI.runtimeconfig.json
+C:\Release\net8.0\publish\samatAPI.pdb
+C:\Release\net8.0\publish\Microsoft.OpenApi.dll
+C:\Release\net8.0\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
