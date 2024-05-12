@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55484552b63b245c1d57b3fcf10b058bcdd04565")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aedfb97b7aa8631d8ca31c80597fb615349ee8fa")]
 [assembly: System.Reflection.AssemblyProductAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

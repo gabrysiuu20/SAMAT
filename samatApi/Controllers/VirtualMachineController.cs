@@ -6,31 +6,16 @@ namespace samatAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class VirtualMachineController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<VirtualMachineController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public VirtualMachineController(ILogger<VirtualMachineController> logger)
         {
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
         internal readonly struct Status
         {
             public string Errors { get;  }
@@ -85,6 +70,44 @@ namespace samatAPI.Controllers
             // Don't rely on or trust the FileName property without validation.
 
             return Ok();
+        }
+
+        [HttpGet("CopyFile")]
+
+        public async Task<string> CopyFile()
+        {
+            var fileName = await Exec("cp /home/vm/test.txt /home/vm/test2.txt");
+
+
+            return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
+        }
+
+
+        [HttpGet("StartVm")]
+
+        public async Task<string> StartVirtualMachine()
+        {
+            // ps -ef | grep qemu-system-x86
+                
+            // Logic to start a virtual machine
+            // This example assumes you have qemu-system-x86 installed and in the system PATH
+            var fileName = await Exec("sudo virsh start AndroidUAM");
+
+            return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
+        }
+
+
+        [HttpGet("StopVm")]
+
+        public async Task<string> StopVirtualMachine()
+        {
+
+                // Logic to stop a virtual machine
+                // This example assumes you have qemu-system-x86 installed and in the system PATH
+                var fileName = await Exec("sudo virsh destroy AndroidUAM");
+
+                return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
+
         }
     }
 }
