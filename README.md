@@ -8,8 +8,8 @@ Aplikacja SAMAT umożliwia łatwe utworzenie jednorazowej maszyny wirtualnej, a 
 •	Łatwe tworzenie jednorazowej maszyny wirtualnej (piaskownicy) za pośrednictwem Internetu\
 •	Przekazywanie obrazu na żywo z maszyny wirtualnej do przeglądarki\
 •	Możliwość wgrywania plików do piaskownicy\
-•	Podstawowy nadzór nad strukturą systemu plików\ 
-•	Podstawowy nadzór nad danymi przesyłanymi przez sieć\
+•	Podstawowy nadzór nad strukturą systemu plików\
+•	Podstawowy nadzór nad danymi przesyłanymi przez sieć
 
 
 ## Instalacja
@@ -29,10 +29,10 @@ Aplikacja SAMAT umożliwia łatwe utworzenie jednorazowej maszyny wirtualnej, a 
     ```
 
 ## Autorzy
-Filip Sroczyński \ 
+Filip Sroczyński\
 Michał Malinowski\
 Gabriel Rebelski\
-Michał Wnuk\
+Michał Wnuk
 
 ## Licencja
 
