@@ -143,6 +143,7 @@ sudo tcpdump
 ```
 ## Działanie aplikacji
 ![image](screenshots/samat.png)
+![image](screenshots/machineaccess.png)
 ![image](screenshots/traffic.png)
 ## Dokumentacja
 
