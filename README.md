@@ -142,7 +142,12 @@ sudo service squid restart
 sudo tcpdump 
 ```
 ## Dokumentacja
+
 Dokumentacje projektu jest dostępna za pośrednictwem swagger oraz wewnątrz kodu źródłowego za pomocą standardowych podsumowań XML.
+
+## Architektura
+
+![image](screenshots/architektura.png)
 ## Autorzy
 
 Filip Sroczyński
