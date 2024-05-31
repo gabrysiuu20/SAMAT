@@ -34,6 +34,3 @@ Michał Malinowski\
 Gabriel Rebelski\
 Michał Wnuk
 
-## Licencja
-
-[MIT](https://choosealicense.com/licenses/mit/)
