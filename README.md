@@ -141,6 +141,9 @@ sudo service squid restart
 ```
 sudo tcpdump 
 ```
+## Działanie aplikacji
+![image](screenshots/samat.png)
+![image](screenshots/traffic.png)
 ## Dokumentacja
 
 Dokumentacje projektu jest dostępna za pośrednictwem swagger oraz wewnątrz kodu źródłowego za pomocą standardowych podsumowań XML.
