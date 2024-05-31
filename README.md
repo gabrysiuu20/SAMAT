@@ -11,20 +11,37 @@ Aplikacja SAMAT umożliwia łatwe utworzenie jednorazowej maszyny wirtualnej, a 
 • Podstawowy nadzór nad strukturą systemu plików
 • Podstawowy nadzór nad danymi przesyłanymi przez sieć
 
+## Wymagania sprzętowe
+
+- Linux Debian 12 lub pochodna
+- Procesor z obsługą VT-x oraz VT-d
+- Obsługa IOMMU
+- 20 GB RAM
+- 100 GB Dysk zalecany SSD
+- Zalecany serwer VPN
+  
 ## Instalacja
 
 1. Sklonuj repozytorium
 2. Zainstaluj wymagane biblioteki:
    ```
+   cd samatFrontend
    npm install
    ```
-3. Zainstaluj narzędzia administracyjne oraz obsługę maszyn wirtualnych i kontenerów:
-   ```
-   sudo apt install cockpit cockpit-machines cockpit-podman cockpit-networkmanager podman-compose cockpit-pcp nfs-common redir squid-openssl -y
-   ```
-4. Uruchom aplikację:
+3. Uruchom aplikację:
    ```
    npm start
+   ```
+4. Uruchom samatAPI:
+   ```
+   cd ..
+   cd samatAPI
+   dotnet build
+   dotnet run
+   ```
+ 5. Zainstaluj narzędzia administracyjne oraz obsługę maszyn wirtualnych i kontenerów:
+   ```
+   sudo apt install cockpit cockpit-machines cockpit-podman cockpit-networkmanager podman-compose cockpit-pcp nfs-common redir squid-openssl -y
    ```
 
 ## Konfiguracja Serwera
@@ -71,6 +88,7 @@ sudo podman run --detach --restart always -it -p 7001:80 docker.io/kamehb/websoc
 Aby uruchomić maszyny wirtualne, wykonaj poniższe komendy:
 
 ```
+cd ../configs
 sudo virsh create AndroidUAM.xml
 sudo virsh create BlissUAM.xml
 ```
@@ -119,6 +137,12 @@ Aby uruchomić ponownie Squid, wykonaj poniższą komendę:
 sudo service squid restart
 ```
 
+### Uruchom tcpdump
+```
+sudo tcpdump 
+```
+## Dokumentacja
+Dokumentacje projektu jest dostępna za pośrednictwem swagger oraz wewnątrz kodu źródłowego za pomocą standardowych podsumowań XML.
 ## Autorzy
 
 Filip Sroczyński
