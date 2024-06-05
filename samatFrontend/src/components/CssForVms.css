@@ -14,3 +14,14 @@
     margin-top: 1em;
     padding: 1em;
 }
+
+.main-container{
+    margin-top: 20px;
+}
+
+
+.vm-container{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}

@@ -38,11 +38,6 @@ export default function SecondVm({isPending}) {
 
     return (  
       <div className="SecondVm">
-        <Wrapper style={{
-          opacity: isPending ? 0.7 : 1 
-        }}>
-          <Title>SAMAT version 1.1</Title>
-        </Wrapper>
         <OptButton onClick={() => navigate("/")}>
           Home Screen 
         </OptButton>

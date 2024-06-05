@@ -4,6 +4,7 @@ import { Screen } from '../vncLib'
 import sleepyAndroid from '../assets/sleepyAndroid.png'
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useBeforeUnload, isRouteErrorResponse } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
 
 
 export default function FirstVm({isPending}) {
@@ -84,11 +85,6 @@ export default function FirstVm({isPending}) {
 
     return (  
       <div className="FirstVm">
-        <Wrapper style={{
-          opacity: isPending ? 0.7 : 1 
-        }}>
-          <Title>SAMAT version 1.1</Title>
-        </Wrapper>
         <OptButton onClick={() => navigate("/")}>
           Home Screen
         </OptButton>
@@ -98,6 +94,7 @@ export default function FirstVm({isPending}) {
         <OptButton onClick={() => sendFile()}>
           VirusTotal Check
         </OptButton>
+        
         
         <div className="startButtonPosition">
           {
@@ -113,9 +110,7 @@ export default function FirstVm({isPending}) {
         </div>
         
         <div className="App-header">
-          {
-            isValid(vncUrl)
-              ?
+          {isValid(vncUrl) ?
               (
                 <Screen
                   url={vncUrl}
@@ -129,8 +124,7 @@ export default function FirstVm({isPending}) {
                   ref={vncScreenRef}
                 />
               ) 
-              : <img src={sleepyAndroid} alt="android"/>
-          }
+              : <img src={sleepyAndroid} width={100} height={100} alt="android"/>}
         </div>
       
       </div>

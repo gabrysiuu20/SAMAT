@@ -6,7 +6,7 @@ import React, {
     useState
   } from "react"
   import RFB from "../noVNC/core/rfb"
-  
+
   export let Events
   
   ;(function(Events) {
@@ -324,7 +324,7 @@ import React, {
           onMouseLeave={handleMouseLeave}
         />
         {loading &&
-          (loadingUI ?? <div className="text-white loading">Loading...</div>)}
+          (loadingUI ?? <div className="text-white loading">Łączenie...</div>)}
       </>
     )
   }
