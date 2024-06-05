@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\srocz\Desktop\projekt\SAMAT\samatApi\bin\Debug\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-06-05T21:17:28.5807004Z;True|2024-06-05T22:48:31.8317818+02:00;True|2024-06-05T22:26:00.0034712+02:00;True|2024-06-05T22:17:14.8925710+02:00;True|2024-06-05T21:59:37.4463258+02:00;True|2024-06-05T21:59:14.7824528+02:00;True|2024-06-05T21:55:07.0144836+02:00;True|2024-06-05T21:42:25.6275033+02:00;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

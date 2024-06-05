@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\repos\\samatAPI\\samatAPI.csproj": {}
+    "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj": {}
   },
   "projects": {
-    "E:\\repos\\samatAPI\\samatAPI.csproj": {
+    "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\repos\\samatAPI\\samatAPI.csproj",
+        "projectUniqueName": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
         "projectName": "samatAPI",
-        "projectPath": "E:\\repos\\samatAPI\\samatAPI.csproj",
+        "projectPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
         "packagesPath": "C:\\Users\\srocz\\.nuget\\packages\\",
-        "outputPath": "E:\\repos\\samatAPI\\obj\\publish\\linux-x64\\",
+        "outputPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\obj\\publish\\linux-x64\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "E:\\Visual studio\\Shared\\NuGetPackages"
@@ -47,7 +47,7 @@
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
