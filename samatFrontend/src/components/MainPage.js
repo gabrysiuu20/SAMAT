@@ -4,7 +4,7 @@ import { useNavigate, useBeforeUnload, isRouteErrorResponse } from "react-router
 import './CssForVms.css'
 import {ButtonsContainer, EmptyScreenVM, InfoBoxLong, InfoBoxLongUpper, InfoBoxLongBottom, InfoBoxShort, 
   InfoBoxShortUpper, InfoBoxShortBottom, InfoBoxShortBottomScrolled, InfoBoxShortBottomPermissions, InfoBoxLongBottomSection, 
-  ButtonWithIcon, ButtonWithIcon2} from './StyledComp.js'
+  ButtonWithIcon, ButtonWithIcon2, WrapperDiv} from './StyledComp.js'
 
 import uploadIcon from '../assets/upload_file.svg'
 import downloadIcon from '../assets/file_download.svg'
@@ -322,11 +322,11 @@ export default function MainPage({ isPending }) {
                     <Col>
                       <InfoBoxLongBottomSection>
                         <div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div>
-                        <div><Badge bg="dark">Rozmiar pliku</Badge> {hybSize + ` bajtów`}</div>
+                        <div><Badge bg="dark">Ilość bajtów</Badge> {hybSize}</div>
                         <div><Badge bg="dark">MD5</Badge> {hybMD5}</div>
                         <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
-                        <div><Badge bg="dark">SHA256</Badge> {hybSHA256.slice(0,45) + ` ...`}</div>
-                        <div><Badge bg="dark">SHA512</Badge> {hybSHA512.slice(0,45) + ` ...`}</div>
+                        <WrapperDiv><Badge bg="dark">SHA256</Badge> {hybSHA256}</WrapperDiv>
+                        <WrapperDiv><Badge bg="dark">SHA512</Badge> {hybSHA512}</WrapperDiv>
                         <div><Badge bg="dark">Data analizy</Badge> {hybTime}</div>
                       </InfoBoxLongBottomSection>
                     </Col>
