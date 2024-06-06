@@ -86,7 +86,7 @@ export const InfoBoxLong = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 250px;
-  max-height: 600px;
+  max-height: 1200px;
   padding: 12px;
   gap: 6px;
   border-radius: 20px;
