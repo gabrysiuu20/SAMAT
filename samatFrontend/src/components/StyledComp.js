@@ -86,7 +86,7 @@ export const InfoBoxLong = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 250px;
-  max-height: 500px;
+  max-height: 600px;
   padding: 12px;
   gap: 6px;
   border-radius: 20px;
@@ -157,7 +157,7 @@ export const InfoBoxShortBottomScrolled = styled.div`
   flex-direction: column;
   font-weight: 500;
   gap: 2px;
-  max-height: 300px;
+  height: 300px;
   overflow-y: scroll;
   border: 2px solid #101010;;
   border-radius: 4px;
@@ -176,4 +176,3 @@ export const InfoBoxShortBottomPermissions = styled.div`
   background-color: #101010;
 
 `
-
