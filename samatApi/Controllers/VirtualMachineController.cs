@@ -30,7 +30,7 @@ namespace samatAPI.Controllers
         /// <summary>
         /// Uruchamia polecenia w bash.
         /// </summary>
-        /// <param name="command">Wype³nij polecenie do uruchomienia</param>
+        /// <param name="command">Wypeï¿½nij polecenie do uruchomienia</param>
         internal async Task<Status> Exec(string command)
         {
             var process = new Process();
@@ -44,7 +44,7 @@ namespace samatAPI.Controllers
             return new Status(await process.StandardOutput.ReadToEndAsync(), await process.StandardError.ReadToEndAsync());
         }
         /// <summary>
-        /// Wyœwietla system plików na maszynie wirutalnej z Androidem
+        /// Wyï¿½wietla system plikï¿½w na maszynie wirutalnej z Androidem
         /// </summary>
         [HttpGet("ShowFileSystem")]
         public async Task<string> ShowFileSystem()
@@ -63,10 +63,23 @@ namespace samatAPI.Controllers
             return string.Join(Environment.NewLine, ret.Output, ret.Errors);
 
         }
+
+        /// <summary>
+        /// WyÅ›wietla listÄ™ uprawnieÅ„ do wybranego APK
+        /// </summary>
+        [HttpGet("ShowPermissions")]
+        public async Task<string> ShowPermissions(string appName)
+        {
+            var connect = await Exec("adb connect 192.168.199.161");
+            var before = await Exec("adb shell dumpsys package packagename | grep permission");
+            var ret = await Exec("adb shell diff /mnt/sdcard/Download/info_before.txt /mnt/sdcard/Download/info_after.txt");
+            var disconnect = await Exec("adb disconnect 192.168.199.161");
+            return string.Join(Environment.NewLine, ret.Output, ret.Errors);
+        }
+    
         /// <summary>
         /// Instalowanie APK
         /// </summary>
-
         private async Task<string> InstallApk()
         {
             var connect = await Exec("adb connect 192.168.199.161");
@@ -121,7 +134,7 @@ namespace samatAPI.Controllers
         }
 
         /// <summary>
-        /// Uruchamia maszyne wirtualn¹
+        /// Uruchamia maszyne wirtualnï¿½
         /// </summary>
         [HttpGet("StartVm")]
 
@@ -137,7 +150,7 @@ namespace samatAPI.Controllers
         }
 
         /// <summary>
-        /// Zatrzymuje maszyne wirtualn¹
+        /// Zatrzymuje maszyne wirtualnï¿½
         /// </summary>
         [HttpGet("StopVm")]
 

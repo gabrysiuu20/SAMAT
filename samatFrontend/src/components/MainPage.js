@@ -69,7 +69,12 @@ export default function MainPage({ isPending }) {
       setUploadedFile(e.target.files);
     }
 
-    
+    const showPermissions = async () => {
+      if (uploadedFile[0] == "") return;
+
+      
+    }
+
     async function sendFile() {
 
       const file = uploadedFile[0]
@@ -312,7 +317,13 @@ export default function MainPage({ isPending }) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      {permissions.map((permission, index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{permission}</td>
+                        </tr>
+                      ))}
+                      {/* <tr>
                         <td>1</td>
                         <td>ANDROID.CAMERA</td>
                         <td><Badge bg="danger">NIEBEZPIECZNE</Badge></td>
@@ -326,7 +337,7 @@ export default function MainPage({ isPending }) {
                         <td>3</td>
                         <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
                         <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </Table>
                 </InfoBoxShortBottomPermissions>
