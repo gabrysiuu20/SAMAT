@@ -70,16 +70,15 @@ export default function MainPage({ isPending }) {
     }
 
     
-    const sendFile = () => {
+    async function sendFile() {
+
       const file = uploadedFile[0]
-      //console.log(file)
+
+      //VIRUSTOTAL UPLOAD
 
       const formData = new FormData();
       formData.append('file', file);
 
-      //console.log(formData)
-
-      //VIRUSTOTAL
       fetch('https://www.virustotal.com/api/v3/files', {
         method: 'POST',
         body: formData,
@@ -89,34 +88,96 @@ export default function MainPage({ isPending }) {
       })
       .then(response => response.json())
       .then(data => {
-        console.log('File uploaded successfully:', data);
-        //console.log('ID:', data.data.id);
+        console.log('VirusTotal uploaded successfully:', data);
         analiseID(data.data.id)
       })
       .catch(error => {
-        console.error('Error uploading file:', error);
+        console.error('VirusTotal error uploading:', error);
       });
+
+
+      //SAMAT UPLOAD
+
+      // const formData2 = new FormData();
+      // formData2.append('formFile', file);
+
+      // fetch('http://192.168.199.160/VirtualMachine/Upload', {
+      //   method: 'POST',
+      //   body: formData2
+      // })
+      // .then(response => response)
+      // .then(data => {
+      //   console.log('Upload successfull:', data);
+      //   analiseSAMAT()
+      // })
+      // .catch(error => {
+      //   console.error('Upload error:', error);
+      // });
+
+      //END
     }
 
     //VIRUSTOTAL ANALYSIS
-    const analiseID = (id) => {
-      const options = {
+    const [vtMalicious, setvtMalicious] = useState([])
+    const [vtHarmless, setvtHarmless] = useState([])
+    const [vtUndetected, setvtUndetected] = useState([])
+    const [vtSuspicious, setvtSuspicious] = useState([])
+    const [vtMalwareBytes, setvtMalwareBytes] = useState([])
+    const [vtClamAV, setvtClamAV] = useState([])
+    const [vtAVG, setvtAVG] = useState([])
+
+    async function analiseID (id) {
+      await fetch('https://www.virustotal.com/api/v3/analyses/' + id, {
         method: 'GET',
         headers: {
           accept: 'application/json',
           'x-apikey': '977f090b832f3539b859ca70241c08e8ffe386ea45c399c15a0f0a33f6a844af'
         }
-      };
-      
-      fetch('https://www.virustotal.com/api/v3/analyses/' + id, options)
+        })
         .then(response => response.json())
-        .then(response => console.log(response))
+        .then(data => { 
+          console.log(data.data.attributes.stats);
+          console.log(data.data);
+          setvtMalicious(data.data.attributes.stats.malicious);
+          setvtHarmless(data.data.attributes.stats.harmless);
+          setvtUndetected(data.data.attributes.stats.undetected);
+          setvtSuspicious(data.data.attributes.stats.suspicious);
+          setvtMalwareBytes(data.data.attributes.results.Malwarebytes.result);
+          setvtClamAV(data.data.attributes.results.ClamAV.result);
+          setvtAVG(data.data.attributes.results.AVG.result);
+        })
         .catch(err => console.error(err));
+        };
 
+    //SAMAT ANALYSIS
+
+    async function analiseSAMAT () {
+            //SAMAT SHOWFILESYSTEM
+            await fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
+              method: 'GET',
+            })
+            .then(response => response)
+            .then(data => {
+              console.log('ShowFileSystem successfull:', data);
+            })
+            .catch(error => {
+              console.error('ShowFileSystem error:', error);
+            });
+      
+            //SAMAT SHOWPROXY
+            await fetch('http://192.168.199.160/VirtualMachine/ShowProxy', {
+              method: 'GET',
+            })
+            .then(response => {
+              console.log(response)
+            })
+            .then(data => {
+              console.log('ShowProxy successfull:', data);
+            })
+            .catch(error => {
+              console.error('ShowProxy error:', error);
+            });
     }
-
-
-    const dlugitekst = "Wypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane daneWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxyWypisane dane proxy"
 
     return (
       <Container fluid="xl" className="main-container">
@@ -212,7 +273,7 @@ export default function MainPage({ isPending }) {
               <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"> <Image src={proxyIcon} width={24} height={24}/> PROXY</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                  {dlugitekst}
+                   Proxy tekst
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -266,34 +327,8 @@ export default function MainPage({ isPending }) {
                         <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
                         <td><Badge bg="success">BEZPIECZNE</Badge></td>
                       </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
                     </tbody>
                   </Table>
-                
                 </InfoBoxShortBottomPermissions>
               </InfoBoxShort>
           </Col>
@@ -301,14 +336,22 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={bugIcon} width={24} height={24}/> ANALIZA VIRUSTOTAL</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottom>
-                  Tutaj bedzie analiza virustotal
                   <div>
                     <ProgressBar>
-                      <ProgressBar  variant="success" now={30} key={1} />
-                      <ProgressBar  variant="warning" now={20} key={2} />
-                      <ProgressBar  variant="danger" now={50} key={3} />
+                      <ProgressBar variant="success" now={vtHarmless} key={1} />
+                      <ProgressBar variant="warning" now={vtSuspicious} key={2} />
+                      <ProgressBar variant="danger" now={vtMalicious} key={3} />
+                      <ProgressBar variant="secondary" now={vtUndetected} key={4} />
                     </ProgressBar>
                   </div>
+                  <br/>
+                  <h5><Badge bg="danger" text="light">Niebezpieczne</Badge> {vtMalicious} </h5>
+                  <h5><Badge bg="success" text="light">Bezpieczne</Badge> {vtHarmless} </h5>
+                  <h5><Badge bg="warning" text="dark">Podejrzane</Badge> {vtSuspicious} </h5>
+                  <h5><Badge bg="secondary" text="light">Nie wykryto</Badge> {vtUndetected} </h5>
+                  <h5><Badge bg="primary" text="light">Wynik Malwarebytes </Badge> {vtMalwareBytes} </h5>
+                  <h5><Badge bg="primary" text="light">Wynik ClamAV </Badge> {vtClamAV} </h5>
+                  <h5><Badge bg="primary" text="light">Wynik AVG </Badge> {vtAVG} </h5>
                 </InfoBoxShortBottom>
               </InfoBoxShort>
           </Col>
