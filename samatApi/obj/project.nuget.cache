@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Qj9/1UPDY1mJ6y+uW499P+ekXreQsoC1XFv9jjU4iCLFd15Mf14hQ/A4vMESReXasgELEZrTz63hvK1AyEOn7Q==",
+  "dgSpecHash": "0AR6DhfjvGIQtcIp/rv1eDtC6sDR2XGVCyFfIkqXFYLBD/D0CWUpkwsqP40ACUAkrMv7Uq85y/SBPyw+Mx/OVQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\user\\Documents\\SAMAT\\samatApi\\samatAPI.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,8 @@
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
-    "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+    "C:\\Users\\user\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512",
+    "C:\\Users\\user\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\8.0.4\\microsoft.netcore.app.host.linux-x64.8.0.4.nupkg.sha512"
   ],
   "logs": []
 }

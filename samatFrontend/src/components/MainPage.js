@@ -27,6 +27,76 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 
+const safePermissions = [
+  "ACCESS_WIFI_STATE",
+  "ACCESS_NETWORK_STATE",
+  "INTERNET",
+  "BLUETOOTH",
+  "BLUETOOTH_ADMIN",
+  "CHANGE_WIFI_STATE",
+  "CHANGE_NETWORK_STATE",
+  "VIBRATE",
+  "WAKE_LOCK",
+  "RECEIVE_BOOT_COMPLETED",
+  "DISABLE_KEYGUARD",
+  "GET_TASKS",
+  "SYSTEM_ALERT_WINDOW",
+  "USE_FINGERPRINT",
+  "SET_TIME_ZONE",
+  "SET_WALLPAPER",
+  "SET_WALLPAPER_HINTS"
+];
+
+const dangerousPermissions = [
+  "READ_CALENDAR",
+  "WRITE_CALENDAR",
+  "CAMERA",
+  "READ_CONTACTS",
+  "WRITE_CONTACTS",
+  "GET_ACCOUNTS",
+  "ACCESS_FINE_LOCATION",
+  "ACCESS_COARSE_LOCATION",
+  "RECORD_AUDIO",
+  "READ_PHONE_STATE",
+  "CALL_PHONE",
+  "READ_CALL_LOG",
+  "WRITE_CALL_LOG",
+  "ADD_VOICEMAIL",
+  "USE_SIP",
+  "PROCESS_OUTGOING_CALLS",
+  "BODY_SENSORS",
+  "SEND_SMS",
+  "RECEIVE_SMS",
+  "READ_SMS",
+  "RECEIVE_WAP_PUSH",
+  "RECEIVE_MMS",
+  "READ_EXTERNAL_STORAGE",
+  "WRITE_EXTERNAL_STORAGE",
+  "ACCESS_BACKGROUND_LOCATION",
+  "ACTIVITY_RECOGNITION"
+];
+
+const mediumPermissions = [
+  "REQUEST_INSTALL_PACKAGES",
+  "MANAGE_DOCUMENTS",
+  "READ_SYNC_SETTINGS",
+  "WRITE_SYNC_SETTINGS",
+  "GET_PACKAGE_SIZE",
+  "MOUNT_UNMOUNT_FILESYSTEMS",
+  "ACCESS_LOCATION_EXTRA_COMMANDS",
+  "RESTART_PACKAGES",
+  "KILL_BACKGROUND_PROCESSES",
+  "MODIFY_AUDIO_SETTINGS",
+  "TRANSMIT_IR",
+  "NFC",
+  "BLUETOOTH_PRIVILEGED",
+  "MANAGE_ACCOUNTS",
+  "USE_CREDENTIALS",
+  "SUBSCRIBED_FEEDS_READ",
+  "SUBSCRIBED_FEEDS_WRITE",
+  "READ_SYNC_STATS"
+];
+
 
 export default function MainPage({ isPending }) {
     const [vncUrl, setVncUrl] = useState("")
@@ -69,17 +139,12 @@ export default function MainPage({ isPending }) {
       setUploadedFile(e.target.files);
     }
 
-    const showPermissions = async () => {
-      if (uploadedFile[0] == "") return;
-
-      
-    }
+    const [loading, setLoading] = useState(false);
 
     async function sendFile() {
-
+      setLoading(true);
       const file = uploadedFile[0]
-
-      //VIRUSTOTAL UPLOAD
+      // VIRUSTOTAL UPLOAD
       const formData = new FormData();
       formData.append('file', file);
 
@@ -104,14 +169,16 @@ export default function MainPage({ isPending }) {
       const formData2 = new FormData();
       formData2.append('formFile', file);
 
-      fetch('http://192.168.199.160/VirtualMachine/Upload', {
+      fetch(`http://192.168.199.160/VirtualMachine/Upload?appName=${uploadedFile[0].name}`, {
         method: 'POST',
         body: formData2
       })
       .then(response => response)
       .then(data => {
+        console.log(formData2);
         console.log('Upload successfull:', data);
-        analiseSAMAT()
+        analiseSAMAT();
+        setLoading(false);
       })
       .catch(error => {
         console.error('Upload error:', error);
@@ -175,34 +242,62 @@ export default function MainPage({ isPending }) {
     //SAMAT ANALYSIS
     const [samatFileSystem, setsamatFileSystem] = useState()
     const [samatProxy, setsamatProxy] = useState()
+    const [permissions, setPermissions] = useState([]);
+
 
     async function analiseSAMAT () {
-            //SAMAT SHOWFILESYSTEM
-            await fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
-              method: 'GET',
-            })
-            .then(response => response.text())
-            .then(response => setsamatFileSystem(response))
-            .then(data => {
-              console.log('ShowFileSystem successfull:', data);
-            })
-            .catch(error => {
-              console.error('ShowFileSystem error:', error);
-            });
-      
-            //SAMAT SHOWPROXY
-            await fetch('http://192.168.199.160/VirtualMachine/ShowProxy', {
-              method: 'GET',
-            })
-            .then(response => response.text())
-            .then(response => setsamatProxy(response))
-            .then(data => {
-              console.log('ShowProxy successfull:', data);
-            })
-            .catch(error => {
-              console.error('ShowProxy error:', error);
-            });
-    }
+      try {
+        const response = await Promise.all([
+          //SAMAT SHOWFILESYSTEM
+          fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
+            method: 'GET',
+          })
+          .then(response => response.text())
+          .then(response => setsamatFileSystem(response))
+          .then(data => {
+            console.log('ShowFileSystem successfull:', data);
+          })
+          .catch(error => {
+            console.error('ShowFileSystem error:', error);
+          }),
+    
+          //SAMAT SHOWPROXY
+          fetch('http://192.168.199.160/VirtualMachine/ShowProxy', {
+            method: 'GET',
+          })
+          .then(response => response.text())
+          .then(response => setsamatProxy(response))
+          .then(data => {
+            console.log('ShowProxy successfull:', data);
+          })
+          .catch(error => {
+            console.error('ShowProxy error:', error);
+          }),
+
+          //SAMAT PERMISSIONS
+          fetch(`http://192.168.199.160/VirtualMachine/ShowPermissions?appName=${uploadedFile[0].name}`, {
+            method: 'GET',
+          })
+          .then(response => response.text())
+          .then(response => {
+            const rows = response.split('\n');
+            console.log(rows)
+            setPermissions(rows);
+          })                
+          .then(data => {
+            console.log('ShowPermission successfull:', data);
+          })
+          .catch(error => {
+            console.error('ShowPermission error:', error);
+          })
+        ]);
+
+        const data = await Promise.all(response.map(response => response.json()));
+      } catch (error) {
+        console.error('An error has occured:', error);
+      }
+      }
+    
 
     //HYBRID ANALYSIS
 
@@ -261,6 +356,33 @@ export default function MainPage({ isPending }) {
         console.error('Hybrid error analysis:', error);
       });
     }
+
+    const categorizePermission = (permission) => {
+      const startIndex = permission.lastIndexOf(".");
+      const endIndex = permission.indexOf(":");
+      const phrase = permission.substring(startIndex+1, endIndex);
+      console.log(phrase);
+      if (dangerousPermissions.includes(phrase)) {
+        return 'danger';
+      } else if (mediumPermissions.includes(phrase)) {
+        return 'warning';
+      } else {
+        return 'success';
+      }
+    };
+  
+    const getBadgeText = (permission) => {
+      const startIndex = permission.lastIndexOf(".");
+      const endIndex = permission.indexOf(":");
+      const phrase = permission.substring(startIndex+1, endIndex);
+      if (dangerousPermissions.includes(phrase)) {
+        return 'DANGEROUS';
+      } else if (mediumPermissions.includes(phrase)) {
+        return 'MEDIUM';
+      } else {
+        return 'SAFE';
+      }
+    };
 
     return (
       <Container fluid="xl" className="main-container">
@@ -366,7 +488,7 @@ export default function MainPage({ isPending }) {
               <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"> <Image src={proxyIcon} width={24} height={24}/> PROXY</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                   {samatProxy}
+                   {loading ? <div className="loading">Loading...</div> : samatProxy}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -374,7 +496,7 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={folderIcon} width={24} height={24}/> SYSTEM PLIKÓW</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                  {samatFileSystem}
+                  {loading ? <div className="loading">Loading...</div> : samatFileSystem}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -428,12 +550,26 @@ export default function MainPage({ isPending }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {permissions.map((permission, index) => (
-                        <tr key={index}>
-                          <td>{index + 1}</td>
-                          <td>{permission}</td>
-                        </tr>
-                      ))}
+                      {loading 
+                        ? <div className="loading">Loading...</div> 
+                        : permissions.map((permission, index) => 
+                            (
+                              <tr key={index-2}>
+                                <td>
+                                  {index+1}
+                                </td>
+                                <td>
+                                  {permission}
+                                </td>
+                                <td>
+                                  <Badge bg={categorizePermission(permission)}>
+                                    {getBadgeText(permission)}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            )
+                          )
+                        }
                       {/* <tr>
                         <td>1</td>
                         <td>ANDROID.CAMERA</td>

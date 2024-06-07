@@ -70,23 +70,30 @@ namespace samatAPI.Controllers
         [HttpGet("ShowPermissions")]
         public async Task<string> ShowPermissions(string appName)
         {
+            string trimAppName = appName.Trim();
+            string pattern = "[^a-zA-Z0-9 ]";
+            string result = System.Text.RegularExpressions.Regex.Replace(trimAppName, pattern, "");
+            Console.WriteLine($"Your variable value: {result.Substring(0,5)}");
             var connect = await Exec("adb connect 192.168.199.161");
-            var before = await Exec("adb shell dumpsys package packagename | grep permission");
-            var ret = await Exec("adb shell diff /mnt/sdcard/Download/info_before.txt /mnt/sdcard/Download/info_after.txt");
+            var additional = await Exec($"adb shell pm list packages | grep -i {result.Substring(0,5)}");
+            int dotIndicatingAppName = additional.Output.LastIndexOf('.');
+            string ourApp = additional.Output.Substring(dotIndicatingAppName+1);      
+            var ret = await Exec($"adb shell dumpsys package {ourApp} | grep granted=true -m 1000 | awk \'{{print $1}}\'");
+            Console.WriteLine($"Your variable value: {ret.Output}");
             var disconnect = await Exec("adb disconnect 192.168.199.161");
-            return string.Join(Environment.NewLine, ret.Output, ret.Errors);
+            return string.Join(string.Empty, ret.Output.Trim(), ret.Errors);
         }
     
         /// <summary>
         /// Instalowanie APK
         /// </summary>
-        private async Task<string> InstallApk()
+        private async Task<string> InstallApk(string appName)
         {
             var connect = await Exec("adb connect 192.168.199.161");
             await Exec("adb root");
             var before = await Exec("adb shell  \"find /data -print | sort | sed 's;[^/]*/;|---;g;s;---|; |;g' > /mnt/sdcard/Download/info_before.txt\"");
-            var ret = await Exec("adb install /home/vm/virus.apk");
-
+            var ret = await Exec($"adb install /home/vm/{appName}");
+            Console.WriteLine($"Your variable value: {ret.Output}");
             var disconnect = await Exec("adb disconnect 192.168.199.161");
             return string.Join(Environment.NewLine, ret.Output, ret.Errors);
             //return before.Errors ;
@@ -98,7 +105,7 @@ namespace samatAPI.Controllers
         [HttpPost("Upload")]
         [DisableRequestSizeLimit]
         //[RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile)
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile, string appName)
         {
             if (formFile == null || formFile.Length == 0)
             {
@@ -106,11 +113,11 @@ namespace samatAPI.Controllers
             }
 
 
-            using (var stream = new FileStream("/home/vm/virus.apk", FileMode.Create))
+            using (var stream = new FileStream($"/home/vm/{appName}", FileMode.Create))
             {
                 await formFile.CopyToAsync(stream);
             }
-            var install = await InstallApk();
+            var install = await InstallApk(appName);
 
 
             return Ok(install);
