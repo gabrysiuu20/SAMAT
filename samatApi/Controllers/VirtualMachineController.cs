@@ -59,9 +59,11 @@ namespace samatAPI.Controllers
         [HttpGet("ShowProxy")]
         public async Task<string> ShowProxy()
         {
-            var ret = await Exec("cat /var/log/squid/access.log | grep '192.168.199.158' | tail -n 1000 ");
-            return string.Join(Environment.NewLine, ret.Output, ret.Errors);
-
+            //var ret = await Exec("cat /var/log/squid/access.log | grep '192.168.199.158' | tail -n 1000 ");
+            //var ret = await Exec("cat /home/vm/access1.log");
+            var ret = (await System.IO.File.ReadAllTextAsync("/var/log/squid/access.log")).Split(Environment.NewLine).Where(x => x.Contains("192.168.199.158"));
+            //return string.Join(Environment.NewLine, ret.Output, ret.Errors);
+            return string.Concat(ret.Skip(Math.Max(0, ret.Count() - 1000)));
         }
         /// <summary>
         /// Instalowanie APK
