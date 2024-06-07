@@ -121,7 +121,7 @@ export default function MainPage({ isPending }) {
         method: 'POST',
         body: formData3,
         headers: {
-        'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+        'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
@@ -206,7 +206,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/state` , {
         method: 'GET',
         headers: {
-          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
@@ -235,7 +235,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/summary` , {
         method: 'GET',
         headers: {
-          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
