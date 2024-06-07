@@ -4,7 +4,7 @@ import { useNavigate, useBeforeUnload, isRouteErrorResponse } from "react-router
 import './CssForVms.css'
 import {ButtonsContainer, EmptyScreenVM, InfoBoxLong, InfoBoxLongUpper, InfoBoxLongBottom, InfoBoxShort, 
   InfoBoxShortUpper, InfoBoxShortBottom, InfoBoxShortBottomScrolled, InfoBoxShortBottomPermissions, InfoBoxLongBottomSection, 
-  ButtonWithIcon, ButtonWithIcon2} from './StyledComp.js'
+  ButtonWithIcon, ButtonWithIcon2, WrapperDiv} from './StyledComp.js'
 
 import uploadIcon from '../assets/upload_file.svg'
 import downloadIcon from '../assets/file_download.svg'
@@ -80,7 +80,6 @@ export default function MainPage({ isPending }) {
       const file = uploadedFile[0]
 
       //VIRUSTOTAL UPLOAD
-
       const formData = new FormData();
       formData.append('file', file);
 
@@ -89,7 +88,7 @@ export default function MainPage({ isPending }) {
         body: formData,
         headers: {
         accept: 'application/json', 
-        'x-apikey': '977f090b832f3539b859ca70241c08e8ffe386ea45c399c15a0f0a33f6a844af'}
+        'x-apikey': 'd6e08b45c8a7f54b61fd1146f1aaba112e3dc8685edae2ad204382b6fe2de515'}
       })
       .then(response => response.json())
       .then(data => {
@@ -101,23 +100,42 @@ export default function MainPage({ isPending }) {
       });
 
 
-      //SAMAT UPLOAD
+      // //SAMAT UPLOAD
+      const formData2 = new FormData();
+      formData2.append('formFile', file);
 
-      // const formData2 = new FormData();
-      // formData2.append('formFile', file);
+      fetch('http://192.168.199.160/VirtualMachine/Upload', {
+        method: 'POST',
+        body: formData2
+      })
+      .then(response => response)
+      .then(data => {
+        console.log('Upload successfull:', data);
+        analiseSAMAT()
+      })
+      .catch(error => {
+        console.error('Upload error:', error);
+      });
 
-      // fetch('http://192.168.199.160/VirtualMachine/Upload', {
-      //   method: 'POST',
-      //   body: formData2
-      // })
-      // .then(response => response)
-      // .then(data => {
-      //   console.log('Upload successfull:', data);
-      //   analiseSAMAT()
-      // })
-      // .catch(error => {
-      //   console.error('Upload error:', error);
-      // });
+      //HYBRID UPLOAD
+      const formData3 = new FormData();
+      formData3.append('file', file);
+      formData3.append('environment_id', 200);
+
+      fetch('https://hybrid-analysis.com/api/v2/submit/file', {
+        method: 'POST',
+        body: formData3,
+        headers: {
+        'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Hybrid uploaded successfully:', data);
+        analiseHybrid(data.job_id)
+      })
+      .catch(error => {
+        console.error('Hybrid error uploading:', error);
+      });
 
       //END
     }
@@ -136,7 +154,7 @@ export default function MainPage({ isPending }) {
         method: 'GET',
         headers: {
           accept: 'application/json',
-          'x-apikey': '977f090b832f3539b859ca70241c08e8ffe386ea45c399c15a0f0a33f6a844af'
+          'x-apikey': 'd6e08b45c8a7f54b61fd1146f1aaba112e3dc8685edae2ad204382b6fe2de515'
         }
         })
         .then(response => response.json())
@@ -155,13 +173,16 @@ export default function MainPage({ isPending }) {
         };
 
     //SAMAT ANALYSIS
+    const [samatFileSystem, setsamatFileSystem] = useState()
+    const [samatProxy, setsamatProxy] = useState()
 
     async function analiseSAMAT () {
             //SAMAT SHOWFILESYSTEM
             await fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
               method: 'GET',
             })
-            .then(response => response)
+            .then(response => response.text())
+            .then(response => setsamatFileSystem(response))
             .then(data => {
               console.log('ShowFileSystem successfull:', data);
             })
@@ -173,15 +194,72 @@ export default function MainPage({ isPending }) {
             await fetch('http://192.168.199.160/VirtualMachine/ShowProxy', {
               method: 'GET',
             })
-            .then(response => {
-              console.log(response)
-            })
+            .then(response => response.text())
+            .then(response => setsamatProxy(response))
             .then(data => {
               console.log('ShowProxy successfull:', data);
             })
             .catch(error => {
               console.error('ShowProxy error:', error);
             });
+    }
+
+    //HYBRID ANALYSIS
+
+    async function analiseHybrid (jobId) {
+      console.log(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/state`)
+      fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/state` , {
+        method: 'GET',
+        headers: {
+          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Hybrid state successfully:', data);
+        analiseHybridSuccess(jobId)
+      })
+      .catch(error => {
+        console.error('Hybrid error state:', error);
+      });
+    }
+
+    const [hybSHA1, sethybSHA1] = useState([])
+    const [hybSHA256, sethybSHA256] = useState([])
+    const [hybSHA512, sethybSHA512] = useState([])
+    const [hybMD5, sethybMD5] = useState([])
+    const [hybSize, sethybSize] = useState([])
+    const [hybTime, sethybTime] = useState([])
+    const [hybName, sethybName] = useState([])
+    const [hybThreatScore, sethybThreatScore] = useState([])
+    const [hybVerdict, sethybVerdict] = useState([])
+    const [hybAttacks, sethybAttacks] = useState([])
+    const [hybSignatures, sethybSignatures] = useState([])
+
+    async function analiseHybridSuccess (jobId) {
+      console.log(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/summary`)
+      fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/summary` , {
+        method: 'GET',
+        headers: {
+          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Hybrid analysis successfully:', data);
+        sethybSHA1(data.sha1);
+        sethybSHA256(data.sha256)
+        sethybSHA512(data.sha512)
+        sethybMD5(data.md5)
+        sethybSize(data.size)
+        sethybTime(data.analysis_start_time)
+        sethybName(data.submit_name)
+        sethybThreatScore(data.threat_score)
+        sethybVerdict(data.verdict)
+        sethybAttacks(data.mitre_attcks)
+        sethybSignatures(data.signatures)
+      })
+      .catch(error => {
+        console.error('Hybrid error analysis:', error);
+      });
     }
 
     return (
@@ -248,23 +326,33 @@ export default function MainPage({ isPending }) {
                   <Row>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <div><Badge bg="dark">Nazwa pliku</Badge> Aplikacja XD</div>
-                        <div><Badge bg="dark">Rozmiar pliku</Badge> 10.53MB</div>
-                        <div><Badge bg="dark">MD5</Badge> ba64bbc1f05ce490692cde8bc60bf4b7</div>
-                        <div><Badge bg="dark">SHA1</Badge> 9f1f4ebae91d5c8271630082911b8ec09e430ffd</div>
-                        <div><Badge bg="dark">SHA256</Badge> 43c6aeeae007bb0c33210fddceb0e95f88b45f5039383c4da911d61f9cb732b7</div>
-                        <div><Badge bg="dark">Developer</Badge> SAMAT Interactive</div>
-                        <div><Badge bg="dark">Data wydania</Badge> 22/02/2024</div>
+                        <div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div>
+                        <div><Badge bg="dark">Ilość bajtów</Badge> {hybSize}</div>
+                        <div><Badge bg="dark">MD5</Badge> {hybMD5}</div>
+                        <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
+                        <WrapperDiv><Badge bg="dark">SHA256</Badge> {hybSHA256}</WrapperDiv>
+                        <WrapperDiv><Badge bg="dark">SHA512</Badge> {hybSHA512}</WrapperDiv>
+                        <div><Badge bg="dark">Data analizy</Badge> {hybTime}</div>
                       </InfoBoxLongBottomSection>
                     </Col>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <h5><Badge bg="warning" text="dark">Wskaźnik bezpieczeństwa</Badge> 50/100</h5>
-                        <h5><Badge bg="success" text="light">Trackers detection</Badge> 0/432 </h5>
-                        <div><Badge bg="dark">Nazwa pakietu</Badge> com.afwsamples.testdpc</div>
-                        <div><Badge bg="dark">Target SDK</Badge> 34</div>
-                        <div><Badge bg="dark">Min SDK</Badge> 21</div>
-                        <div><Badge bg="dark">Dodatkowe</Badge> info</div>
+                        <h4><Badge bg="dark" text="light">Wskaźnik niebezpieczeństwa</Badge> 
+                        {hybThreatScore > 80 ?
+                        <Badge bg="danger" text="light">{hybThreatScore}</Badge>
+                        : hybThreatScore > 40 ?
+                        <Badge bg="warning" text="dark">{hybThreatScore}</Badge>
+                        : hybThreatScore > 10 ?
+                        <Badge bg="success" text="light">{hybThreatScore}</Badge>
+                        : <></>}
+                        </h4>
+                        <h4><Badge bg="dark" text="light">Werdykt</Badge> 
+                        {hybVerdict === "malicious" ?
+                        <Badge bg="danger" text="light">{hybVerdict}</Badge>
+                        : hybVerdict === "safe" ? 
+                        <Badge bg="success" text="light">{hybVerdict}</Badge>
+                        : <Badge bg="warning" text="dark">{hybVerdict}</Badge>}
+                        </h4>
                       </InfoBoxLongBottomSection>
                     </Col>
                   </Row>
@@ -278,16 +366,16 @@ export default function MainPage({ isPending }) {
               <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"> <Image src={proxyIcon} width={24} height={24}/> PROXY</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                   Proxy tekst
+                   {samatProxy}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
           <Col>
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={folderIcon} width={24} height={24}/> SYSTEM PLIKÓW</Badge></h4></InfoBoxShortUpper>
-                <InfoBoxShortBottom>
-                  Tutaj bedzie info o systemie plików
-                </InfoBoxShortBottom>
+                <InfoBoxShortBottomScrolled>
+                  {samatFileSystem}
+                </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
         </Row>
@@ -295,9 +383,32 @@ export default function MainPage({ isPending }) {
         <Row>
           <Col>
               <InfoBoxLong>
-                <InfoBoxLongUpper><h4><Badge bg="primary"><Image src={analyticsIcon} width={24} height={24}/> ANALIZA STATYSTYCZNA</Badge></h4></InfoBoxLongUpper>
+                <InfoBoxLongUpper><h4><Badge bg="primary"><Image src={analyticsIcon} width={24} height={24}/> ANALIZA STATYCZNA</Badge></h4></InfoBoxLongUpper>
                 <InfoBoxLongBottom>
-                  Tutaj analiza statystyczna
+                <Row>
+                    <Col>
+                      <InfoBoxLongBottomSection>
+                      <h4><Badge bg="dark" text="light">Wykryte potencjalne ataki</Badge> </h4>
+                      {hybAttacks.map((list, index)=>(
+                        <><div><Badge key={index} bg="danger" text="light">{`Wykryty potencjalny atak`}</Badge> {list.tactic} </div>
+                        <div><Badge key={index} bg="warning" text="dark">{`Użyta technika`}</Badge> {list.technique} </div> 
+                        <div><Badge key={index} bg="warning" text="dark">{`Link do ataku`}</Badge> <a href={list.attck_id_wiki}>{list.attck_id_wiki}</a></div> 
+                        <br/></>
+                      ))}
+                      </InfoBoxLongBottomSection>
+                    </Col>
+                    <Col>
+                      <InfoBoxLongBottomSection>
+                      <h4><Badge bg="dark" text="light">Wykryte sygnatury</Badge></h4>
+                      {hybSignatures.map((list, index)=>(
+                        <><div><Badge key={index} bg="danger" text="light">{`Wykryta sygnatura`}</Badge> {list.name} </div>
+                        <div><Badge key={index} bg="warning" text="dark">{`Kategoria`}</Badge> {list.category} </div> 
+                        <div><Badge key={index} bg="warning" text="dark">{`Opis`}</Badge> {list.description.slice(0,107)}</div> 
+                        <br/></>
+                      ))}
+                      </InfoBoxLongBottomSection>
+                    </Col>
+                  </Row>
                 </InfoBoxLongBottom>
               </InfoBoxLong>
             </Col>
