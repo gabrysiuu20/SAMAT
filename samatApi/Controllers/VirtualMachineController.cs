@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 
 namespace samatAPI.Controllers
 {
@@ -7,7 +8,7 @@ namespace samatAPI.Controllers
     [Route("[controller]")]
     public class VirtualMachineController : ControllerBase
     {
-
+        private string ipmachine;
         private readonly ILogger<VirtualMachineController> _logger;
 
         public VirtualMachineController(ILogger<VirtualMachineController> logger)
@@ -47,34 +48,37 @@ namespace samatAPI.Controllers
         /// Wyœwietla system plików na maszynie wirutalnej z Androidem
         /// </summary>
         [HttpGet("ShowFileSystem")]
-        public async Task<string> ShowFileSystem()
+        public async Task<string> ShowFileSystem(int machine = 1)
         {
-            var connect = await Exec("adb connect 192.168.199.161");
+            ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
+            var connect = await Exec($"adb connect {ipmachine}");
             var before = await Exec("adb shell  \"find /data -print | sort | sed 's;[^/]*/;|---;g;s;---|; |;g' > /mnt/sdcard/Download/info_after.txt\"");
             var ret = await Exec("adb shell diff /mnt/sdcard/Download/info_before.txt /mnt/sdcard/Download/info_after.txt");
-            var disconnect = await Exec("adb disconnect 192.168.199.161");
+            var disconnect = await Exec($"adb disconnect {ipmachine}");
             return string.Join(Environment.NewLine, ret.Output, ret.Errors);
         }
 
         [HttpGet("ShowProxy")]
-        public async Task<string> ShowProxy()
+        public async Task<string> ShowProxy(int machine = 1)
         {
+            ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
             //var ret = await Exec("cat /var/log/squid/access.log | grep '192.168.199.158' | tail -n 1000 ");
             //var ret = await Exec("cat /home/vm/access1.log");
-            var ret = (await System.IO.File.ReadAllTextAsync("/var/log/squid/access.log")).Split(Environment.NewLine).Where(x => x.Contains("192.168.199.158"));
+            var ret = (await System.IO.File.ReadAllTextAsync("/var/log/squid/access.log")).Split(Environment.NewLine).Where(x => x.Contains(ipmachine));
             //return string.Join(Environment.NewLine, ret.Output, ret.Errors);
             return string.Concat(ret.Skip(Math.Max(0, ret.Count() - 1000)));
         }
 
         [HttpGet("ShowPermissions")]
-        public async Task<string> ShowPermissions()
+        public async Task<string> ShowPermissions(int machine=1)
         {
+            ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
             var package = await Exec("aapt dump badging /home/vm/virus.apk | grep \"package: name='\" | sed -E \"s/.*package: name='([^']*)'.*/\\1/\"");
-           
-            var connect = await Exec("adb connect 192.168.199.161");
+
+            var connect = await Exec($"adb connect {ipmachine}");
             var permissions = await Exec($"adb shell dumpsys package {package.Output}");
             var ret = permissions.Output.Split(Environment.NewLine).Select(x => x.Split(':').First().Trim()).Where(x => x.StartsWith("android.permission")).Distinct();
-            var disconnect = await Exec("adb disconnect 192.168.199.161");
+            var disconnect = await Exec($"adb disconnect {ipmachine}");
             return string.Join(Environment.NewLine, string.Join(Environment.NewLine,ret), permissions.Errors);
 
         }
@@ -86,12 +90,13 @@ namespace samatAPI.Controllers
 
         private async Task<string> InstallApk()
         {
-            var connect = await Exec("adb connect 192.168.199.161");
+
+            var connect = await Exec($"adb connect {ipmachine}");
             await Exec("adb root");
             var before = await Exec("adb shell  \"find /data -print | sort | sed 's;[^/]*/;|---;g;s;---|; |;g' > /mnt/sdcard/Download/info_before.txt\"");
             var ret = await Exec("adb install /home/vm/virus.apk");
 
-            var disconnect = await Exec("adb disconnect 192.168.199.161");
+            var disconnect = await Exec($"adb disconnect {ipmachine}");
             return string.Join(Environment.NewLine, ret.Output, ret.Errors);
             //return before.Errors ;
         }
@@ -102,8 +107,9 @@ namespace samatAPI.Controllers
         [HttpPost("Upload")]
         [DisableRequestSizeLimit]
         //[RequestFormLimits(MultipartBodyLengthLimit = 209715200)]
-        public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile)
+        public async Task<IActionResult> OnPostUploadAsync(IFormFile formFile, int machine=1)
         {
+            ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
             if (formFile == null || formFile.Length == 0)
             {
                 return BadRequest("No file uploaded.");
