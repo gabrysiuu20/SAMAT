@@ -69,6 +69,8 @@ export default function MainPage({ isPending }) {
       setUploadedFile(e.target.files);
     }
 
+    const hybridApiKey = 'bkxn73w1a48c3dcafc06shy390679c28otqqta3j0e3fc20cutw67n1042fa4ddc'
+
     
     async function sendFile() {
 
@@ -121,7 +123,7 @@ export default function MainPage({ isPending }) {
         method: 'POST',
         body: formData3,
         headers: {
-        'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
+        'api-key': `${hybridApiKey}`}
       })
       .then(response => response.json())
       .then(data => {
@@ -206,7 +208,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/state` , {
         method: 'GET',
         headers: {
-          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
+          'api-key': `${hybridApiKey}`}
       })
       .then(response => response.json())
       .then(data => {
@@ -235,7 +237,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/summary` , {
         method: 'GET',
         headers: {
-          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
+          'api-key': `${hybridApiKey}`}
       })
       .then(response => response.json())
       .then(data => {
@@ -321,7 +323,7 @@ export default function MainPage({ isPending }) {
                   <Row>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div>
+                        <WrapperDiv><div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div></WrapperDiv>
                         <div><Badge bg="dark">Ilość bajtów</Badge> {hybSize}</div>
                         <div><Badge bg="dark">MD5</Badge> {hybMD5}</div>
                         <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
