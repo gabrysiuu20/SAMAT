@@ -278,6 +278,7 @@ export default function MainPage({ isPending }) {
             .then(response => response.text())
             .then(response => {
               const rows = response.split('\n');
+              rows.pop()
               //console.log(rows)
               setsamatPermissions(rows);
             })                
