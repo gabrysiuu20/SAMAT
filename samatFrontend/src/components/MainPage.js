@@ -169,7 +169,7 @@ export default function MainPage({ isPending }) {
       const formData2 = new FormData();
       formData2.append('formFile', file);
 
-      fetch(`http://192.168.199.160/VirtualMachine/Upload?appName=${uploadedFile[0].name}`, {
+      fetch('http://192.168.199.160/VirtualMachine/Upload', {
         method: 'POST',
         body: formData2
       })
@@ -193,7 +193,7 @@ export default function MainPage({ isPending }) {
         method: 'POST',
         body: formData3,
         headers: {
-        'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+        'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
@@ -246,8 +246,6 @@ export default function MainPage({ isPending }) {
 
 
     async function analiseSAMAT () {
-      try {
-        const response = await Promise.all([
           //SAMAT SHOWFILESYSTEM
           fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
             method: 'GET',
@@ -275,7 +273,7 @@ export default function MainPage({ isPending }) {
           }),
 
           //SAMAT PERMISSIONS
-          fetch(`http://192.168.199.160/VirtualMachine/ShowPermissions?appName=${uploadedFile[0].name}`, {
+          fetch('http://192.168.199.160/VirtualMachine/ShowPermissions', {
             method: 'GET',
           })
           .then(response => response.text())
@@ -290,13 +288,7 @@ export default function MainPage({ isPending }) {
           .catch(error => {
             console.error('ShowPermission error:', error);
           })
-        ]);
-
-        const data = await Promise.all(response.map(response => response.json()));
-      } catch (error) {
-        console.error('An error has occured:', error);
-      }
-      }
+    }
     
 
     //HYBRID ANALYSIS
@@ -306,7 +298,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/state` , {
         method: 'GET',
         headers: {
-          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
@@ -335,7 +327,7 @@ export default function MainPage({ isPending }) {
       fetch(`https://hybrid-analysis.com/api/v2/report/` + jobId + `/summary` , {
         method: 'GET',
         headers: {
-          'api-key': '4daicrcrfb78a44dc564ygjea5c61f977y0tv6h1938a3170uu4drj5l7869d9e9'}
+          'api-key': 'bgmpp1sm121ad85ees065pwpfa01c0fbdjpiazqg665f7a65amoy0r8t3c6eb865'}
       })
       .then(response => response.json())
       .then(data => {
@@ -488,7 +480,7 @@ export default function MainPage({ isPending }) {
               <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"> <Image src={proxyIcon} width={24} height={24}/> PROXY</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                   {loading ? <div className="loading">Loading...</div> : samatProxy}
+                   {loading ? <div>Loading...</div> : samatProxy}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -496,7 +488,7 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={folderIcon} width={24} height={24}/> SYSTEM PLIKÓW</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                  {loading ? <div className="loading">Loading...</div> : samatFileSystem}
+                  {loading ? <div>Loading...</div> : samatFileSystem}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -550,41 +542,25 @@ export default function MainPage({ isPending }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {loading 
-                        ? <div className="loading">Loading...</div> 
-                        : permissions.map((permission, index) => 
-                            (
-                              <tr key={index-2}>
-                                <td>
-                                  {index+1}
-                                </td>
-                                <td>
-                                  {permission}
-                                </td>
-                                <td>
-                                  <Badge bg={categorizePermission(permission)}>
-                                    {getBadgeText(permission)}
-                                  </Badge>
-                                </td>
-                              </tr>
-                            )
+                      {loading ? 
+                        <div>Loading...</div> : permissions.map((permission, index) => 
+                          (
+                            <tr key={index}>
+                              <td>
+                                {index+1}
+                              </td>
+                              <td>
+                                {permission}
+                              </td>
+                              <td>
+                                <Badge bg={categorizePermission(permission)}>
+                                  {getBadgeText(permission)}
+                                </Badge>
+                              </td>
+                            </tr>
                           )
-                        }
-                      {/* <tr>
-                        <td>1</td>
-                        <td>ANDROID.CAMERA</td>
-                        <td><Badge bg="danger">NIEBEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>ANDROID.WAKE_LOCK</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr> */}
+                        )
+                      }                  
                     </tbody>
                   </Table>
                 </InfoBoxShortBottomPermissions>
