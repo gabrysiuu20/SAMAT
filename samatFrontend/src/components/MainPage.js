@@ -26,6 +26,7 @@ import Badge from 'react-bootstrap/Badge';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
+import Toast from 'react-bootstrap/Toast';
 
 const safePermissions = [
   "ACCESS_WIFI_STATE",
@@ -100,15 +101,17 @@ const mediumPermissions = [
 
 export default function MainPage({ isPending }) {
     const [vncUrl, setVncUrl] = useState("")
-    const [network, setNetwork] = useState(true)
     const [uploadedFile, setUploadedFile] = useState("")
+    const [chooseVnc, setchooseVnc] = useState("1")
     const vncScreenRef = useRef(null)
+    const [showToastFile, setshowToastFile] = useState(false);
+
+    const toggleShowToastFilee = () => setshowToastFile(!showToastFile);
 
     const isValid = vncUrl => {
       if (!vncUrl.startsWith("ws://") && !vncUrl.startsWith("wss://")) {
           return false
       }
-
       return true
     } 
 
@@ -127,12 +130,12 @@ export default function MainPage({ isPending }) {
 
     const runVnc = () => {
         setVncUrl(atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMA=='))
-        console.log("first vnc set")
+        setchooseVnc('1')
     }
 
     const runVnc2 = () => {
         setVncUrl(atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMQ=='))
-        console.log("second vnc set")
+        setchooseVnc('2')
     }
 
     const handleSubmitFile = (e) => {
@@ -144,66 +147,85 @@ export default function MainPage({ isPending }) {
     
     async function sendFile() {
 
+      var isFileValid = false
       const file = uploadedFile[0]
+      
+      if(file === undefined){
+        isFileValid = false
+        //console.log("Nie wybrano pliku")
+      }
+      else{
+        isFileValid = true
+        //console.log("Plik jest wybrany")
+      }
 
-      //VIRUSTOTAL UPLOAD
-      const formData = new FormData();
-      formData.append('file', file);
+      if(isFileValid){
 
-      fetch('https://www.virustotal.com/api/v3/files', {
-        method: 'POST',
-        body: formData,
-        headers: {
-        accept: 'application/json', 
-        'x-apikey': 'd6e08b45c8a7f54b61fd1146f1aaba112e3dc8685edae2ad204382b6fe2de515'}
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('VirusTotal uploaded successfully:', data);
-        analiseID(data.data.id)
-      })
-      .catch(error => {
-        console.error('VirusTotal error uploading:', error);
-      });
+        console.log("Wysyłanie do maszyny nr: ", chooseVnc)
+
+        //VIRUSTOTAL UPLOAD
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('https://www.virustotal.com/api/v3/files', {
+          method: 'POST',
+          body: formData,
+          headers: {
+          accept: 'application/json', 
+          'x-apikey': 'd6e08b45c8a7f54b61fd1146f1aaba112e3dc8685edae2ad204382b6fe2de515'}
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('VirusTotal uploaded successfully:', data);
+          analiseID(data.data.id)
+        })
+        .catch(error => {
+          console.error('VirusTotal error uploading:', error);
+        });
 
 
-      // //SAMAT UPLOAD
-      const formData2 = new FormData();
-      formData2.append('formFile', file);
+        // //SAMAT UPLOAD
+        const formData2 = new FormData();
+        formData2.append('formFile', file);
 
-      fetch('http://192.168.199.160/VirtualMachine/Upload', {
-        method: 'POST',
-        body: formData2
-      })
-      .then(response => response)
-      .then(data => {
-        console.log('Upload successfull:', data);
-        analiseSAMAT()
-      })
-      .catch(error => {
-        console.error('Upload error:', error);
-      });
+        const fetchSamatUpload = `http://192.168.199.160/VirtualMachine/Upload?machine=` + chooseVnc
+        fetch( fetchSamatUpload, {
+          method: 'POST',
+          body: formData2
+        })
+        .then(response => response)
+        .then(data => {
+          console.log('Upload successfull:', data);
+          analiseSAMAT()
+        })
+        .catch(error => {
+          console.error('Upload error:', error);
+        });
 
-      //HYBRID UPLOAD
-      const formData3 = new FormData();
-      formData3.append('file', file);
-      formData3.append('environment_id', 200);
+        //HYBRID UPLOAD
+        const formData3 = new FormData();
+        formData3.append('file', file);
+        formData3.append('environment_id', 200);
 
-      fetch('https://hybrid-analysis.com/api/v2/submit/file', {
-        method: 'POST',
-        body: formData3,
-        headers: {
-        'api-key': `${hybridApiKey}`}
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Hybrid uploaded successfully:', data);
-        analiseHybrid(data.job_id)
-      })
-      .catch(error => {
-        console.error('Hybrid error uploading:', error);
-      });
-
+        fetch('https://hybrid-analysis.com/api/v2/submit/file', {
+          method: 'POST',
+          body: formData3,
+          headers: {
+          'api-key': `${hybridApiKey}`}
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Hybrid uploaded successfully:', data);
+          analiseHybrid(data.job_id)
+        })
+        .catch(error => {
+          console.error('Hybrid error uploading:', error);
+        });
+      }
+      else{
+        toggleShowToastFilee(true)
+        console.log("Błąd: Wybierz plik!")
+      }
       //END
     }
 
@@ -246,7 +268,8 @@ export default function MainPage({ isPending }) {
 
     async function analiseSAMAT () {
             //SAMAT SHOWFILESYSTEM
-            await fetch('http://192.168.199.160/VirtualMachine/ShowFileSystem', {
+            const fetchSamatFileSystem = `http://192.168.199.160/VirtualMachine/ShowFileSystem?machine=` + chooseVnc
+            await fetch(fetchSamatFileSystem, {
               method: 'GET',
             })
             .then(response => response.text())
@@ -259,7 +282,8 @@ export default function MainPage({ isPending }) {
             });
       
             //SAMAT SHOWPROXY
-            await fetch('http://192.168.199.160/VirtualMachine/ShowProxy', {
+            const fetchSamatShowProxy = `http://192.168.199.160/VirtualMachine/ShowProxy?machine=` + chooseVnc
+            await fetch(fetchSamatShowProxy, {
               method: 'GET',
             })
             .then(response => response.text())
@@ -272,7 +296,8 @@ export default function MainPage({ isPending }) {
             });
 
             //SAMAT PERMISSIONS
-            fetch('http://192.168.199.160/VirtualMachine/ShowPermissions', {
+            const fetchSamatPermissions = `http://192.168.199.160/VirtualMachine/ShowPermissions?machine=` + chooseVnc
+            fetch(fetchSamatPermissions, {
               method: 'GET',
             })
             .then(response => response.text())
@@ -424,6 +449,13 @@ export default function MainPage({ isPending }) {
                     </ButtonWithIcon2>
                   </Button>
                 </>
+                <Toast show={showToastFile} onClose={toggleShowToastFilee}>
+                  <Toast.Header>
+                    <strong className="me-auto">Błąd - brak pliku do analizy</strong>
+                    <small></small>
+                  </Toast.Header>
+                  <Toast.Body>Należy wybrać plik .apk do analizy</Toast.Body>
+                </Toast>
                 <Button variant="secondary">
                     <ButtonWithIcon2>
                     <Image src={downloadIcon} width={24} height={24}/>
