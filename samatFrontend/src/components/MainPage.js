@@ -27,6 +27,76 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 
+const safePermissions = [
+  "ACCESS_WIFI_STATE",
+  "ACCESS_NETWORK_STATE",
+  "INTERNET",
+  "BLUETOOTH",
+  "BLUETOOTH_ADMIN",
+  "CHANGE_WIFI_STATE",
+  "CHANGE_NETWORK_STATE",
+  "VIBRATE",
+  "WAKE_LOCK",
+  "RECEIVE_BOOT_COMPLETED",
+  "DISABLE_KEYGUARD",
+  "GET_TASKS",
+  "SYSTEM_ALERT_WINDOW",
+  "USE_FINGERPRINT",
+  "SET_TIME_ZONE",
+  "SET_WALLPAPER",
+  "SET_WALLPAPER_HINTS"
+];
+
+const dangerousPermissions = [
+  "READ_CALENDAR",
+  "WRITE_CALENDAR",
+  "CAMERA",
+  "READ_CONTACTS",
+  "WRITE_CONTACTS",
+  "GET_ACCOUNTS",
+  "ACCESS_FINE_LOCATION",
+  "ACCESS_COARSE_LOCATION",
+  "RECORD_AUDIO",
+  "READ_PHONE_STATE",
+  "CALL_PHONE",
+  "READ_CALL_LOG",
+  "WRITE_CALL_LOG",
+  "ADD_VOICEMAIL",
+  "USE_SIP",
+  "PROCESS_OUTGOING_CALLS",
+  "BODY_SENSORS",
+  "SEND_SMS",
+  "RECEIVE_SMS",
+  "READ_SMS",
+  "RECEIVE_WAP_PUSH",
+  "RECEIVE_MMS",
+  "READ_EXTERNAL_STORAGE",
+  "WRITE_EXTERNAL_STORAGE",
+  "ACCESS_BACKGROUND_LOCATION",
+  "ACTIVITY_RECOGNITION"
+];
+
+const mediumPermissions = [
+  "REQUEST_INSTALL_PACKAGES",
+  "MANAGE_DOCUMENTS",
+  "READ_SYNC_SETTINGS",
+  "WRITE_SYNC_SETTINGS",
+  "GET_PACKAGE_SIZE",
+  "MOUNT_UNMOUNT_FILESYSTEMS",
+  "ACCESS_LOCATION_EXTRA_COMMANDS",
+  "RESTART_PACKAGES",
+  "KILL_BACKGROUND_PROCESSES",
+  "MODIFY_AUDIO_SETTINGS",
+  "TRANSMIT_IR",
+  "NFC",
+  "BLUETOOTH_PRIVILEGED",
+  "MANAGE_ACCOUNTS",
+  "USE_CREDENTIALS",
+  "SUBSCRIBED_FEEDS_READ",
+  "SUBSCRIBED_FEEDS_WRITE",
+  "READ_SYNC_STATS"
+];
+
 
 export default function MainPage({ isPending }) {
     const [vncUrl, setVncUrl] = useState("")
@@ -172,6 +242,7 @@ export default function MainPage({ isPending }) {
     //SAMAT ANALYSIS
     const [samatFileSystem, setsamatFileSystem] = useState()
     const [samatProxy, setsamatProxy] = useState()
+    const [samatPermissions, setsamatPermissions] = useState([]);
 
     async function analiseSAMAT () {
             //SAMAT SHOWFILESYSTEM
@@ -198,6 +269,23 @@ export default function MainPage({ isPending }) {
             })
             .catch(error => {
               console.error('ShowProxy error:', error);
+            });
+
+            //SAMAT PERMISSIONS
+            fetch('http://192.168.199.160/VirtualMachine/ShowPermissions', {
+              method: 'GET',
+            })
+            .then(response => response.text())
+            .then(response => {
+              const rows = response.split('\n');
+              console.log(rows)
+              setsamatPermissions(rows);
+            })                
+            .then(data => {
+              console.log('ShowPermission successfull:', data);
+            })
+            .catch(error => {
+              console.error('ShowPermission error:', error);
             });
     }
 
@@ -257,6 +345,39 @@ export default function MainPage({ isPending }) {
       .catch(error => {
         console.error('Hybrid error analysis:', error);
       });
+    }
+
+    //PERMISSIONS SAMAT ANALYSIS 
+
+    const categorizePermission = (permission) => {
+      const startIndex = permission.lastIndexOf(".");
+      const endIndex = permission.indexOf(":");
+      const phrase = permission.substring(startIndex+1, endIndex);
+      console.log(phrase);
+      if (dangerousPermissions.includes(phrase)) {
+        return 'danger';
+      } else if (mediumPermissions.includes(phrase)) {
+        return 'warning';
+      } else if (safePermissions.includes(phrase)) {
+        return 'success';
+      } else {
+        return 'secondary';
+      }
+    }
+  
+    const getBadgeText = (permission) => {
+      const startIndex = permission.lastIndexOf(".");
+      const endIndex = permission.indexOf(":");
+      const phrase = permission.substring(startIndex+1, endIndex);
+      if (dangerousPermissions.includes(phrase)) {
+        return 'DANGEROUS';
+      } else if (mediumPermissions.includes(phrase)) {
+        return 'MEDIUM';
+      } else if (safePermissions.includes(phrase)) {
+        return 'SAFE';
+      } else {
+        return 'UNKNOWN';
+      }
     }
 
     return (
@@ -417,7 +538,7 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={androidIcon} width={24} height={24}/> UPRAWNIENIA</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomPermissions>
                   <Table striped bordered hover variant="dark">
-                    <thead>
+                  <thead>
                       <tr>
                         <th>#</th>
                         <th >Uprawnienie</th>
@@ -425,21 +546,24 @@ export default function MainPage({ isPending }) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>ANDROID.CAMERA</td>
-                        <td><Badge bg="danger">NIEBEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>2</td>
-                        <td>ANDROID.WAKE_LOCK</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
-                      <tr>
-                        <td>3</td>
-                        <td>ANDROID.LOSOWE_DLUGIE_UPRAWNIENIE</td>
-                        <td><Badge bg="success">BEZPIECZNE</Badge></td>
-                      </tr>
+                      {samatPermissions.map((permission, index) => 
+                          (
+                            <tr key={index}>
+                              <td>
+                                {index+1}
+                              </td>
+                              <td>
+                                {permission}
+                              </td>
+                              <td>
+                                <Badge bg={categorizePermission(permission)}>
+                                  {getBadgeText(permission)}
+                                </Badge>
+                              </td>
+                            </tr>
+                          )
+                        )
+                      }                  
                     </tbody>
                   </Table>
                 </InfoBoxShortBottomPermissions>
