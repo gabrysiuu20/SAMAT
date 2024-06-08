@@ -323,7 +323,7 @@ export default function MainPage({ isPending }) {
                   <Row>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div>
+                        <WrapperDiv><div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div></WrapperDiv>
                         <div><Badge bg="dark">Ilość bajtów</Badge> {hybSize}</div>
                         <div><Badge bg="dark">MD5</Badge> {hybMD5}</div>
                         <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
