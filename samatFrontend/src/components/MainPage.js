@@ -278,7 +278,7 @@ export default function MainPage({ isPending }) {
             .then(response => response.text())
             .then(response => {
               const rows = response.split('\n');
-              console.log(rows)
+              //console.log(rows)
               setsamatPermissions(rows);
             })                
             .then(data => {
@@ -350,10 +350,8 @@ export default function MainPage({ isPending }) {
     //PERMISSIONS SAMAT ANALYSIS 
 
     const categorizePermission = (permission) => {
-      const startIndex = permission.lastIndexOf(".");
-      const endIndex = permission.indexOf(":");
-      const phrase = permission.substring(startIndex+1, endIndex);
-      console.log(phrase);
+      const startIndex = permission.split(".");
+      const phrase = startIndex[2]
       if (dangerousPermissions.includes(phrase)) {
         return 'danger';
       } else if (mediumPermissions.includes(phrase)) {
@@ -366,9 +364,8 @@ export default function MainPage({ isPending }) {
     }
   
     const getBadgeText = (permission) => {
-      const startIndex = permission.lastIndexOf(".");
-      const endIndex = permission.indexOf(":");
-      const phrase = permission.substring(startIndex+1, endIndex);
+      const startIndex = permission.split(".");
+      const phrase = startIndex[2]
       if (dangerousPermissions.includes(phrase)) {
         return 'DANGEROUS';
       } else if (mediumPermissions.includes(phrase)) {
