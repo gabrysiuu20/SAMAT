@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ihDzhwnYpIGJ3yeSpAK5gpMvnDSswrceUvylZQlE2jBWH3X8K9vyfyT3NHYiTuhWvz+XdEswQod24L8TgtkNng==",
+  "dgSpecHash": "Ffk8IQvzkYPjyHmnDaZOsWuK0xsPXqYcJ+4AXd5Jj9+xz7e9heljMYsEzRRJjX81Hbv6z+xOBgcb9rAMzCMjHA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
+  "projectFilePath": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\srocz\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\srocz\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

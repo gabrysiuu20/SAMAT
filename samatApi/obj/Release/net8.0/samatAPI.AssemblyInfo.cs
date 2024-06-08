@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0b1e66fe02952fd46afb7ec48fe0cef2bc2c89e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac70b571b23e72f134f2684ed454abd761ec7f3f")]
 [assembly: System.Reflection.AssemblyProductAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("samatAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
