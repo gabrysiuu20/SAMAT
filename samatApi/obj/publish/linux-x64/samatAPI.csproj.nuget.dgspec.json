@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj": {}
+    "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj": {
+    "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
+        "projectUniqueName": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj",
         "projectName": "samatAPI",
-        "projectPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
+        "projectPath": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj",
         "packagesPath": "C:\\Users\\srocz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\obj\\publish\\linux-x64\\",
+        "outputPath": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\obj\\publish\\linux-x64\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "E:\\Visual studio\\Shared\\NuGetPackages"

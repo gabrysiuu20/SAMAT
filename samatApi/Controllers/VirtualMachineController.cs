@@ -65,6 +65,21 @@ namespace samatAPI.Controllers
             //return string.Join(Environment.NewLine, ret.Output, ret.Errors);
             return string.Concat(ret.Skip(Math.Max(0, ret.Count() - 1000)));
         }
+
+        [HttpGet("ShowPermissions")]
+        public async Task<string> ShowPermissions()
+        {
+            var package = await Exec("aapt dump badging /home/vm/virus.apk | grep \"package: name='\" | sed -E \"s/.*package: name='([^']*)'.*/\\1/\"");
+           
+            var connect = await Exec("adb connect 192.168.199.161");
+            var permissions = await Exec($"adb shell dumpsys package {package.Output}");
+            var ret = permissions.Output.Split(Environment.NewLine).Select(x => x.Split(':').First().Trim()).Where(x => x.StartsWith("android.permission")).Distinct();
+            var disconnect = await Exec("adb disconnect 192.168.199.161");
+            return string.Join(Environment.NewLine, string.Join(Environment.NewLine,ret), permissions.Errors);
+
+        }
+
+
         /// <summary>
         /// Instalowanie APK
         /// </summary>

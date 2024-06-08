@@ -443,11 +443,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
+      "projectUniqueName": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj",
       "projectName": "samatAPI",
-      "projectPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\samatAPI.csproj",
+      "projectPath": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\samatAPI.csproj",
       "packagesPath": "C:\\Users\\srocz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\srocz\\Desktop\\projekt\\SAMAT\\samatApi\\obj\\",
+      "outputPath": "C:\\Users\\srocz\\Desktop\\reposamat\\SAMAT\\samatApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "E:\\Visual studio\\Shared\\NuGetPackages"
