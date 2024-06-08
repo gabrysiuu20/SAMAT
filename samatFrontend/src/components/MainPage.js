@@ -374,7 +374,7 @@ export default function MainPage({ isPending }) {
       } else if (safePermissions.includes(phrase)) {
         return 'SAFE';
       } else {
-        return 'UNKNOWN';
+        return 'UNCOMMON';
       }
     }
 
