@@ -164,6 +164,7 @@ export const InfoBoxShortBottomScrolled = styled.div`
   padding: 6px 14px 6px 14px;
   background-color: #101010;
   color: white;
+  word-break: break-word;
 `
 
 export const InfoBoxShortBottomPermissions = styled.div`
