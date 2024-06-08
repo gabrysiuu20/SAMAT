@@ -51,6 +51,7 @@ namespace samatAPI.Controllers
         public async Task<string> ShowFileSystem(int machine = 1)
         {
             ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
+            await Exec("adb disconnect");
             var connect = await Exec($"adb connect {ipmachine}");
             var before = await Exec("adb shell  \"find /data -print | sort | sed 's;[^/]*/;|---;g;s;---|; |;g' > /mnt/sdcard/Download/info_after.txt\"");
             var ret = await Exec("adb shell diff /mnt/sdcard/Download/info_before.txt /mnt/sdcard/Download/info_after.txt");
@@ -74,7 +75,7 @@ namespace samatAPI.Controllers
         {
             ipmachine = machine == 1 ? "192.168.199.161" : "192.168.199.167";
             var package = await Exec("aapt dump badging /home/vm/virus.apk | grep \"package: name='\" | sed -E \"s/.*package: name='([^']*)'.*/\\1/\"");
-
+            await Exec("adb disconnect");
             var connect = await Exec($"adb connect {ipmachine}");
             var permissions = await Exec($"adb shell dumpsys package {package.Output}");
             var ret = permissions.Output.Split(Environment.NewLine).Select(x => x.Split(':').First().Trim()).Where(x => x.StartsWith("android.permission")).Distinct();
@@ -90,7 +91,7 @@ namespace samatAPI.Controllers
 
         private async Task<string> InstallApk()
         {
-
+            await Exec("adb disconnect");
             var connect = await Exec($"adb connect {ipmachine}");
             await Exec("adb root");
             var before = await Exec("adb shell  \"find /data -print | sort | sed 's;[^/]*/;|---;g;s;---|; |;g' > /mnt/sdcard/Download/info_before.txt\"");

@@ -4,7 +4,8 @@ import { useNavigate, useBeforeUnload, isRouteErrorResponse } from "react-router
 import './CssForVms.css'
 import {ButtonsContainer, EmptyScreenVM, InfoBoxLong, InfoBoxLongUpper, InfoBoxLongBottom, InfoBoxShort, 
   InfoBoxShortUpper, InfoBoxShortBottom, InfoBoxShortBottomScrolled, InfoBoxShortBottomPermissions, InfoBoxLongBottomSection, 
-  ButtonWithIcon, ButtonWithIcon2, WrapperDiv} from './StyledComp.js'
+  ButtonWithIcon, ButtonWithIcon2, WrapperDiv,
+  Refresh} from './StyledComp.js'
 
 import uploadIcon from '../assets/upload_file.svg'
 import downloadIcon from '../assets/file_download.svg'
@@ -27,7 +28,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 import Toast from 'react-bootstrap/Toast';
-
+import RFB from '../noVNC/core/rfb.js'
 const safePermissions = [
   "ACCESS_WIFI_STATE",
   "ACCESS_NETWORK_STATE",
@@ -104,6 +105,8 @@ export default function MainPage({ isPending }) {
     const [uploadedFile, setUploadedFile] = useState("")
     const [chooseVnc, setchooseVnc] = useState("1")
     const vncScreenRef = useRef(null)
+    const columnsRef = useRef(null)
+
     const [showToastFile, setshowToastFile] = useState(false);
 
     const toggleShowToastFilee = () => setshowToastFile(!showToastFile);
@@ -129,12 +132,26 @@ export default function MainPage({ isPending }) {
     }, [vncUrl]);
 
     const runVnc = () => {
+        const { connect, connected, disconnect, url} = vncScreenRef.current ?? {};
+        console.log(url);
+        console.log(disconnect);
         setVncUrl(atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMA=='))
+        columnsRef.current.innerHTML = ""
+        new RFB(
+          columnsRef.current, atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMA==')
+        )
         setchooseVnc('1')
     }
 
     const runVnc2 = () => {
+      const { connect, connected, disconnect, url} = vncScreenRef.current ?? {};
+      console.log(url);
+      console.log(disconnect);
         setVncUrl(atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMQ=='))
+        columnsRef.current.innerHTML = ""
+        new RFB(
+          columnsRef.current, atob('d3M6Ly8xOTIuMTY4LjE5OS4xNjA6NzAwMQ==')
+        )
         setchooseVnc('2')
     }
 
@@ -407,7 +424,7 @@ export default function MainPage({ isPending }) {
       <Container fluid="xl" className="main-container">
 
         <Row className="vm-container">
-          <Col> 
+          <Col ref={columnsRef}> 
           {isValid(vncUrl) ?
               (
                 <Screen
