@@ -43,18 +43,6 @@ export default function MainPage({ isPending }) {
     const [uploadedFile, setUploadedFile] = useState("")
     
 
-
-    const formatData = (inputData) => {
-      const formattedData = inputData.replace(/(\+{3}.*?)(@@)/g, '$1\n$2')
-                                      .replace(/(\-{3}.*?)(\+{3})/g, '$1\n$2')
-                                      .replace(/(\@\@.*?)(\|)/g, '$1\n$2')
-                                      .replace(/\|-/g, '|-')
-                                      .replace(/\| \|-/g, '|-')
-                                      .replace(/\| \|\|-/g, '|-');
-    
-      return formattedData.split('\n').map(line => line.trim()).filter(Boolean);
-    };
-
     return (
       <>
       <Container fluid="xl" className="main-container">
