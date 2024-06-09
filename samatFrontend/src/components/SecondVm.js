@@ -18,6 +18,8 @@ import androidIcon from '../assets/android.svg'
 import proxyIcon from '../assets/compare_arrows.svg'
 import offIcon from '../assets/power_settings_new.svg'
 import revertIcon from '../assets/history.svg'
+import refreshIcon from '../assets/sync.svg'
+import samatLogo from '../assets/samatnewlogo.png'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
@@ -185,7 +187,9 @@ export default function MainPage({ isPending }) {
 
     const hybridApiKey = 'bkxn73w1a48c3dcafc06shy390679c28otqqta3j0e3fc20cutw67n1042fa4ddc'
 
-    
+    const [hybridJobId, sethybridJobId] = useState("")
+    const [vtJobId, setvtJobId] = useState("")
+
     async function sendFile() {
 
       var isFileValid = false
@@ -219,6 +223,7 @@ export default function MainPage({ isPending }) {
         .then(data => {
           console.log('VirusTotal uploaded successfully:', data);
           analiseID(data.data.id)
+          setvtJobId(data.data.id)
         })
         .catch(error => {
           console.error('VirusTotal error uploading:', error);
@@ -258,6 +263,7 @@ export default function MainPage({ isPending }) {
         .then(data => {
           console.log('Hybrid uploaded successfully:', data);
           analiseHybrid(data.job_id)
+          sethybridJobId(data.job_id)
         })
         .catch(error => {
           console.error('Hybrid error uploading:', error);
@@ -289,7 +295,6 @@ export default function MainPage({ isPending }) {
         })
         .then(response => response.json())
         .then(data => { 
-          console.log(data.data.attributes.stats);
           console.log(data.data);
           setvtMalicious(data.data.attributes.stats.malicious);
           setvtHarmless(data.data.attributes.stats.harmless);
@@ -314,6 +319,7 @@ export default function MainPage({ isPending }) {
               method: 'GET',
             })
             .then(response => response.text())
+            .then(response => formatData(response))
             .then(response => setsamatFileSystem(response))
             .then(data => {
               console.log('ShowFileSystem successfull:', data);
@@ -444,18 +450,42 @@ export default function MainPage({ isPending }) {
       }
     }
 
-    return (
-      <Container fluid="xl" className="main-container">
+    const formatData = (inputData) => {
+      const formattedData = inputData.replace(/(\+{3}.*?)(@@)/g, '$1\n$2')
+                                      .replace(/(\-{3}.*?)(\+{3})/g, '$1\n$2')
+                                      .replace(/(\@\@.*?)(\|)/g, '$1\n$2')
+                                      .replace(/\|-/g, '|-')
+                                      .replace(/\| \|-/g, '|-')
+                                      .replace(/\| \|\|-/g, '|-');
+    
+      return formattedData.split('\n').map(line => line.trim()).filter(Boolean);
+    };
 
-        <Navbar bg="primary" data-bs-theme="dark">
-          <Container>
-            <Navbar.Brand href="/">SAMAT</Navbar.Brand>
-            <Nav className="me-auto">
-              <Nav.Link  href="first-vm">MASZYNA WIRTUALNA 1</Nav.Link>
-              <Nav.Link active={true} href="second-vm">MASZYNA WIRTUALNA 2</Nav.Link>
-            </Nav>
-          </Container>
-        </Navbar>
+    function refreshVnc() {
+      console.log("Odświeżanie ...")
+      analiseSAMAT();
+      analiseHybridSuccess(hybridJobId);
+      analiseID(vtJobId);
+    }
+
+    return (<>
+      <Navbar sticky='top' bg="primary" data-bs-theme="dark" >
+      <Container>
+        <Navbar.Brand href="/" className="brand-logo">
+        <img
+              width={32}
+              height={32}
+              src={samatLogo}
+              alt="Logo"
+            />
+          SAMAT</Navbar.Brand>
+        <Nav className="me-auto">
+          <Nav.Link href="first-vm">MASZYNA WIRTUALNA 1</Nav.Link>
+          <Nav.Link active={true} href="second-vm">MASZYNA WIRTUALNA 2</Nav.Link>
+        </Nav>
+      </Container>
+      </Navbar>
+      <Container fluid="xl" className="main-container">
 
         <Row className="vm-container">
           <Col> 
@@ -513,10 +543,10 @@ export default function MainPage({ isPending }) {
                   </Toast.Header>
                   <Toast.Body>Należy wybrać plik .apk do analizy</Toast.Body>
                 </Toast>
-                <Button variant="secondary">
+                <Button variant="secondary" onClick={() => refreshVnc()}>
                     <ButtonWithIcon2>
-                    <Image src={downloadIcon} width={24} height={24}/>
-                    <b>POBIERZ .PCAP</b>
+                    <Image src={refreshIcon} width={24} height={24}/>
+                    <b>ODŚWIEŻ</b>
                     </ButtonWithIcon2>
                 </Button>
               </ButtonsContainer>
@@ -537,12 +567,12 @@ export default function MainPage({ isPending }) {
                         <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
                         <WrapperDiv><Badge bg="dark">SHA256</Badge> {hybSHA256}</WrapperDiv>
                         <WrapperDiv><Badge bg="dark">SHA512</Badge> {hybSHA512}</WrapperDiv>
-                        <div><Badge bg="dark">Data analizy</Badge> {hybTime}</div>
                       </InfoBoxLongBottomSection>
                     </Col>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <h4><Badge bg="dark" text="light">Wskaźnik niebezpieczeństwa</Badge> 
+                        <div className="verdict-box"><h4><Badge bg="dark" text="light">Wskaźnik niebezpieczeństwa</Badge></h4>
+                        <h4>
                         {hybThreatScore > 80 ?
                         <Badge bg="danger" text="light">{hybThreatScore}</Badge>
                         : hybThreatScore > 40 ?
@@ -550,14 +580,16 @@ export default function MainPage({ isPending }) {
                         : hybThreatScore > 10 ?
                         <Badge bg="success" text="light">{hybThreatScore}</Badge>
                         : <></>}
-                        </h4>
-                        <h4><Badge bg="dark" text="light">Werdykt</Badge> 
+                        </h4></div>
+                        <div className="verdict-box"><h4><Badge bg="dark" text="light">Werdykt</Badge></h4>
+                        <h4>
                         {hybVerdict === "malicious" ?
                         <Badge bg="danger" text="light">{hybVerdict}</Badge>
                         : hybVerdict === "safe" ? 
                         <Badge bg="success" text="light">{hybVerdict}</Badge>
                         : <Badge bg="warning" text="dark">{hybVerdict}</Badge>}
-                        </h4>
+                        </h4></div>
+                        {/* <div><Badge bg="dark">Data analizy</Badge> {hybTime}</div> */}
                       </InfoBoxLongBottomSection>
                     </Col>
                   </Row>
@@ -579,7 +611,9 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={folderIcon} width={24} height={24}/> SYSTEM PLIKÓW</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                  {samatFileSystem}
+                {samatFileSystem ? samatFileSystem.map((line, index) => (
+                    <span key={index}>{line}</span>
+                  )) : <div></div>}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
@@ -681,6 +715,7 @@ export default function MainPage({ isPending }) {
           </Col>
         </Row>
       </Container>
+      </>
     );
   }
 

@@ -35,3 +35,20 @@
     justify-content: center;
     align-items: center;
 }
+
+.brand-logo{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    justify-content: center;
+}
+
+.verdict-box{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.samat-text{
+    color: white;
+}

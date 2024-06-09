@@ -19,6 +19,7 @@ import proxyIcon from '../assets/compare_arrows.svg'
 import slide1 from '../assets/slide1.png'
 import slide2 from '../assets/slide2.jpg'
 import slide3 from '../assets/slide3.jpg'
+import samatLogo from '../assets/samatnewlogo.png'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
@@ -45,17 +46,23 @@ export default function MainPage({ isPending }) {
 
     return (
       <>
-      <Container fluid="xl" className="main-container">
-        <Navbar bg="primary" data-bs-theme="dark">
+        <Navbar sticky='top' bg="primary" data-bs-theme="dark" >
           <Container>
-            <Navbar.Brand href="">SAMAT</Navbar.Brand>
+            <Navbar.Brand href="" className="brand-logo">
+            <img
+                  width={32}
+                  height={32}
+                  src={samatLogo}
+                  alt="Logo"
+                />
+              SAMAT</Navbar.Brand>
             <Nav className="me-auto">
               <Nav.Link href="first-vm">MASZYNA WIRTUALNA 1</Nav.Link>
               <Nav.Link href="second-vm">MASZYNA WIRTUALNA 2</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
-      </Container>
+              <h3 className="samat-text">Secure Android Malware Analysis Tool</h3>
               <Carousel className="carousel-container">
               <Carousel.Item>
                 <img
