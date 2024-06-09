@@ -290,6 +290,7 @@ export default function MainPage({ isPending }) {
               method: 'GET',
             })
             .then(response => response.text())
+            .then(response => formatData(response))
             .then(response => setsamatFileSystem(response))
             .then(data => {
               console.log('ShowFileSystem successfull:', data);
@@ -420,6 +421,18 @@ export default function MainPage({ isPending }) {
       }
     }
 
+
+    const formatData = (inputData) => {
+      const formattedData = inputData.replace(/(\+{3}.*?)(@@)/g, '$1\n$2')
+                                      .replace(/(\-{3}.*?)(\+{3})/g, '$1\n$2')
+                                      .replace(/(\@\@.*?)(\|)/g, '$1\n$2')
+                                      .replace(/\|-/g, '|-')
+                                      .replace(/\| \|-/g, '|-')
+                                      .replace(/\| \|\|-/g, '|-');
+    
+      return formattedData.split('\n').map(line => line.trim()).filter(Boolean);
+    };
+
     return (
       <Container fluid="xl" className="main-container">
 
@@ -539,7 +552,9 @@ export default function MainPage({ isPending }) {
                 <InfoBoxShort>
                 <InfoBoxShortUpper><h4><Badge bg="primary"><Image src={folderIcon} width={24} height={24}/> SYSTEM PLIKÓW</Badge></h4></InfoBoxShortUpper>
                 <InfoBoxShortBottomScrolled>
-                  {samatFileSystem}
+                  {samatFileSystem ? samatFileSystem.map((line, index) => (
+                    <span key={index}>{line}</span>
+                  )) : <div></div>}
                 </InfoBoxShortBottomScrolled>
               </InfoBoxShort>
           </Col>
