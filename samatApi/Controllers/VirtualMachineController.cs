@@ -60,6 +60,13 @@ namespace samatAPI.Controllers
             return string.Join(Environment.NewLine, ret.Output, ret.Errors);
         }
 
+        [HttpGet("ShowPackageName")]
+        public async Task<string> ShowPackageName()
+        {
+            var package = await Exec("aapt dump badging /home/vm/virus.apk | grep \"package: name='\" | sed -E \"s/.*package: name='([^']*)'.*/\\1/\"");
+            return string.Join(Environment.NewLine, package.Output, package.Errors);
+        }
+
         [HttpGet("ShowProxy")]
         public async Task<string> ShowProxy(int machine = 1)
         {
