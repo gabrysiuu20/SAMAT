@@ -9,6 +9,7 @@ namespace samatAPI.Controllers
     public class VirtualMachineController : ControllerBase
     {
         private string ipmachine;
+        private string namemachine;
         private readonly ILogger<VirtualMachineController> _logger;
 
         public VirtualMachineController(ILogger<VirtualMachineController> logger)
@@ -133,12 +134,13 @@ namespace samatAPI.Controllers
         /// <summary>
         /// Podmienia obraz dysku twardego maszyny wirtualnej
         /// </summary>
-        [HttpGet("CopyFile")]
+        [HttpGet("PurgeMachine")]
 
-        public async Task<string> CopyFile()
+        public async Task<string> PurgeMachine(int machine=1)
         {
+            var namemachine = machine == 1 ? "AndroidUAM" : "BlissUAM";
             await StopVirtualMachine();
-            var fileName = await Exec("cp /home/vm/AndroidUAM.qcow2 /var/lib/libvirt/images/AndroidUAM.qcow2");
+            var fileName = await Exec($"cp /home/vm/{namemachine}.qcow2 /var/lib/libvirt/images/{namemachine}.qcow2");
             await StartVirtualMachine();
 
             return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
@@ -149,13 +151,11 @@ namespace samatAPI.Controllers
         /// </summary>
         [HttpGet("StartVm")]
 
-        public async Task<string> StartVirtualMachine()
+        public async Task<string> StartVirtualMachine(int machine = 1)
         {
-            // ps -ef | grep qemu-system-x86
+            var namemachine = machine == 1 ? "AndroidUAM" : "BlissUAM";
 
-            // Logic to start a virtual machine
-            // This example assumes you have qemu-system-x86 installed and in the system PATH
-            var fileName = await Exec("sudo virsh start AndroidUAM");
+            var fileName = await Exec($"virsh start {namemachine}");
 
             return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
         }
@@ -165,15 +165,15 @@ namespace samatAPI.Controllers
         /// </summary>
         [HttpGet("StopVm")]
 
-        public async Task<string> StopVirtualMachine()
+        public async Task<string> StopVirtualMachine(int machine = 1)
         {
+            var namemachine = machine == 1 ? "AndroidUAM" : "BlissUAM";
 
-            // Logic to stop a virtual machine
-            // This example assumes you have qemu-system-x86 installed and in the system PATH
-            var fileName = await Exec("sudo virsh destroy AndroidUAM");
+            var fileName = await Exec($"virsh destroy {namemachine}");
 
             return string.Join(Environment.NewLine, fileName.Output, fileName.Errors);
 
         }
+
     }
 }
