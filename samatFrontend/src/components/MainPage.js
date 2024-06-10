@@ -19,6 +19,8 @@ import proxyIcon from '../assets/compare_arrows.svg'
 import slide1 from '../assets/slide1.png'
 import slide2 from '../assets/slide2.jpg'
 import slide3 from '../assets/slide3.jpg'
+import slide4 from '../assets/slide4.jpg'
+import slide5 from '../assets/slide5.jpg'
 import samatLogo from '../assets/samatnewlogo.png'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -34,6 +36,7 @@ import Image from 'react-bootstrap/Image';
 import Toast from 'react-bootstrap/Toast';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Alert from 'react-bootstrap/Alert';
 
 import Carousel from 'react-bootstrap/Carousel';
 //import ExampleCarouselImage from 'components/ExampleCarouselImage';
@@ -42,6 +45,8 @@ import Carousel from 'react-bootstrap/Carousel';
 export default function MainPage({ isPending }) {
     const [vncUrl, setVncUrl] = useState("")
     const [uploadedFile, setUploadedFile] = useState("")
+
+    
     
 
     return (
@@ -62,15 +67,17 @@ export default function MainPage({ isPending }) {
             </Nav>
           </Container>
         </Navbar>
-              <h3 className="samat-text">Secure Android Malware Analysis Tool</h3>
-              <Carousel className="carousel-container">
+          {/* <Alert variant='primary'>
+            Wybierz jedną z maszyn wirtualnych w menu !
+          </Alert> */}
+            {/* <Carousel className="carousel-container">
               <Carousel.Item>
                 <img
                   className="slide-container"
-                  src={slide1}
+                  src={slide4}
                   alt="First slide"
                 />
-                <Carousel.Caption>
+                <Carousel.Caption className="samat-text">
                   <h3>Wybierz aplikację do analizy</h3>
                   <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                 </Carousel.Caption>
@@ -78,10 +85,10 @@ export default function MainPage({ isPending }) {
               <Carousel.Item>
                 <img
                   className="slide-container"
-                  src={slide2}
+                  src={slide5}
                   alt="First slide"
                 />
-                <Carousel.Caption>
+                <Carousel.Caption className="samat-text">
                   <h3>Stwórz swoją piaskownicę</h3>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </Carousel.Caption>
@@ -89,17 +96,17 @@ export default function MainPage({ isPending }) {
               <Carousel.Item>
               <img
                   className="slide-container"
-                  src={slide3}
+                  src={slide1}
                   alt="First slide"
                 />
-                <Carousel.Caption>
+                <Carousel.Caption className="samat-text">
                   <h3>Zobacz wyniki analizy</h3>
                   <p>
                     Praesent commodo cursus magna, vel scelerisque nisl consectetur.
                   </p>
                 </Carousel.Caption>
               </Carousel.Item>
-            </Carousel>
+            </Carousel> */}
             </>
     );
   }

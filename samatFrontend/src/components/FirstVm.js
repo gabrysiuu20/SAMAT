@@ -310,6 +310,7 @@ export default function MainPage({ isPending }) {
     const [samatFileSystem, setsamatFileSystem] = useState()
     const [samatProxy, setsamatProxy] = useState()
     const [samatPermissions, setsamatPermissions] = useState([]);
+    const [samatPackageName, setsamatPackageName] = useState()
 
     async function analiseSAMAT () {
             //SAMAT SHOWFILESYSTEM
@@ -358,6 +359,20 @@ export default function MainPage({ isPending }) {
             })
             .catch(error => {
               console.error('ShowPermission error:', error);
+            });
+
+            //SAMAT SHOWPACKAGE
+            const fetchSamatPackage = `http://192.168.199.160/VirtualMachine/ShowPackageName`
+            await fetch(fetchSamatPackage, {
+              method: 'GET',
+            })
+            .then(response => response.text())
+            .then(response => setsamatPackageName(response))
+            .then(data => {
+              console.log('ShowPackage successfull:', data);
+            })
+            .catch(error => {
+              console.error('ShowPackage error:', error);
             });
     }
 
@@ -560,7 +575,7 @@ export default function MainPage({ isPending }) {
                   <Row>
                     <Col>
                       <InfoBoxLongBottomSection>
-                        <WrapperDiv><div><Badge bg="dark">Nazwa pliku</Badge> {hybName}</div></WrapperDiv>
+                        <WrapperDiv><div><Badge bg="dark">Nazwa pliku</Badge> {samatPackageName}</div></WrapperDiv>
                         <div><Badge bg="dark">Ilość bajtów</Badge> {hybSize}</div>
                         <div><Badge bg="dark">MD5</Badge> {hybMD5}</div>
                         <div><Badge bg="dark">SHA1</Badge> {hybSHA1}</div>
