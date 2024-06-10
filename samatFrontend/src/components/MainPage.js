@@ -62,8 +62,8 @@ export default function MainPage({ isPending }) {
                 />
               SAMAT</Navbar.Brand>
             <Nav className="me-auto">
-              <Nav.Link href="first-vm">ANDROID 9 (Android-x86)</Nav.Link>
-              <Nav.Link href="second-vm">ANDROID 12 (BlissOS)</Nav.Link>
+              <Nav.Link href="#first-vm">ANDROID 9 (Android-x86)</Nav.Link>
+              <Nav.Link href="#second-vm">ANDROID 12 (BlissOS)</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
